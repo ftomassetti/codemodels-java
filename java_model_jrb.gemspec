@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.name        = 'java_model_jrb'
   s.version     = '0.1.0'
   s.date        = '2013-07-30'
-  s.summary     = "Create EMF models of Java code and serialize them in JSON"
+  s.summary     = "Create EMF models of Java"
   s.description = "Create EMF models of Java code and serialize them in JSON"
   s.authors     = ["Federico Tomassetti"]
   s.email       = 'f.tomassetti@gmail.com'
