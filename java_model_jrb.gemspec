@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.platform    = 'java'
   s.name        = 'java_model_jrb'
-  s.version     = '0.1.1'
-  s.date        = '2013-08-01'
+  s.version     = '0.1.2'
+  s.date        = '2013-08-16'
   s.summary     = "Create EMF models of Java"
   s.description = "Create EMF models of Java code and serialize them in JSON"
   s.authors     = ["Federico Tomassetti"]
@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
     "lib/jars/org.emftext.language.java_1.4.0.v201207310007.jar"]
 
   s.add_runtime_dependency 'emf_jruby', '>= 0.1.2'
+  s.add_runtime_dependency 'light_models'
 end
