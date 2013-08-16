@@ -1,5 +1,3 @@
-require 'java'
-require 'rubygems'
 require 'emf_jruby'
 require 'json'
 require 'zip/zipfilesystem'

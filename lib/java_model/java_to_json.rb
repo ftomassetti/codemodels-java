@@ -1,10 +1,15 @@
 require 'java'
 require 'rubygems'
 require 'emf_jruby'
+require 'lightmodels'
+
+# TODO put in modules...
+
+module JavaModel
 
 IJavaOptions = org.emftext.language.java.resource.java.IJavaOptions
 
-def create_resource_set()
+def self.create_resource_set()
 	resource_set = org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.new
 	resource_set.getLoadOptions.put(IJavaOptions.DISABLE_LAYOUT_INFORMATION_RECORDING,true)
 	rf = org.emftext.language.java.resource.java.mopp.JavaResourceFactory.new
@@ -12,16 +17,16 @@ def create_resource_set()
 	resource_set
 end
 
-def get_resource(resource_set,path)
+def self.get_resource(resource_set,path)
 	resource_set.getResource(org.eclipse.emf.common.util.URI.createFileURI(path),true)
 end
 
-def eobject_class_qname(clazz)
+def self.eobject_class_qname(clazz)
 	raise "not implemented (ParentConcreteClassifier: #{clazz.getParentConcreteClassifier}" if clazz.getParentConcreteClassifier!=clazz
 	clazz.getContainingPackageName.join('.')+"."+clazz.name
 end
 
-def all_direct_content(root)
+def self.all_direct_content(root)
 	contents = []
 	root.keys.each do |k|
 		if k.start_with? 'relcont_' and root[k]
@@ -38,7 +43,7 @@ def all_direct_content(root)
 	contents
 end
 
-def all_deep_content(root)
+def self.all_deep_content(root)
 	contents = []
 	all_direct_content(root).each do |c|
 		contents << c
@@ -47,23 +52,23 @@ def all_deep_content(root)
 	contents
 end
 
-def get_deep_content_of_type(root,type)
+def self.get_deep_content_of_type(root,type)
 	all_deep_content(root).select {|o| o['type']==type}
 end
 
-def get_specific_deep_content(root,type,&block)
+def self.get_specific_deep_content(root,type,&block)
 	get_deep_content_of_type(root,type).find &block
 end
 
 class EClassClassAdapter
 
 	def adapt(eobject,map)
-		map['attr_fullname'] = eobject_class_qname(eobject)
+		map['attr_fullname'] = JavaModel.eobject_class_qname(eobject)
 	end
 
 end
 
-def getter(field)
+def self.getter(field)
 	getter_nb_name = 'get' + field.name.slice(0,1).capitalize + field.name.slice(1..-1)
 	getter_b_name  = 'is' + field.name.slice(0,1).capitalize + field.name.slice(1..-1)
 	methods = field.eContainer.members.select {|m| m.java_kind_of? org.emftext.language.java.members.ClassMethod}
@@ -71,14 +76,14 @@ def getter(field)
 	getter
 end
 
-def setter(field)
+def self.setter(field)
 	setter_name = 'set' + field.name.slice(0,1).capitalize + field.name.slice(1..-1)
 	methods = field.eContainer.members.select {|m| m.java_kind_of? org.emftext.language.java.members.ClassMethod}
 	setter = methods.find {|m| m.name==setter_name}
 	setter
 end
 
-def field_from_getter(getter)
+def self.field_from_getter(getter)
 	if (getter.name.start_with? 'get' and getter.name.length>3) or (getter.name.start_with? 'is' and getter.name.length>2)
 		field_name = getter.name.slice(3,1).downcase + getter.name.slice(4..-1) if getter.name.start_with? 'get'
 		field_name = getter.name.slice(2,1).downcase + getter.name.slice(3..-1) if getter.name.start_with? 'is'
@@ -91,7 +96,7 @@ def field_from_getter(getter)
 	end	
 end
 
-def field_from_setter(setter)
+def self.field_from_setter(setter)
 	if setter.name.start_with? 'set' and setter.name.length>3
 		field_name = setter.name.slice(3,1).downcase + setter.name.slice(4..-1) if setter.name.start_with? 'set'
 		#field_name = getter.name.slice(2,1).downcase + getter.name.slice(3..-1) if getter.name.start_with? 'is'
@@ -107,14 +112,14 @@ end
 class EClassClassMethodAdapter
 
 	def adapt(eobject,map)
-		field = field_from_getter(eobject)
+		field = JavaModel.field_from_getter(eobject)
 		map['attr_getter'] = field!=nil
-		map['relnoncont_getterFor'] = serialization_id(field) if field
+		map['relnoncont_getterFor'] = LightModels::Serialization::serialization_id(field) if field
 		map['relnoncont_getterFor'] = nil unless field
 
-		field = field_from_setter(eobject)
+		field = JavaModel.field_from_setter(eobject)
 		map['attr_setter'] = field!=nil
-		map['relnoncont_setterFor'] = serialization_id(field) if field
+		map['relnoncont_setterFor'] = LightModels::Serialization::serialization_id(field) if field
 		map['relnoncont_setterFor'] = nil unless field
 	end
 
@@ -123,16 +128,18 @@ end
 class EClassFieldAdapter
 
 	def adapt(eobject,map)
-		getter = getter(eobject)
-		map['relnoncont_getter'] = serialization_id(getter) if getter
+		getter = JavaModel.getter(eobject)
+		map['relnoncont_getter'] = LightModels::Serialization::serialization_id(getter) if getter
 		map['relnoncont_getter'] = nil unless getter
 	end
 
 end
 
-def jsonize_java_obj(root)
-	jsonize_obj(root,{
+def self.jsonize_java_obj(root)
+	LightModels::Serialization::jsonize_obj(root,{
 		'http://www.emftext.org/java/classifiers#Class'=> EClassClassAdapter.new,
 		'http://www.emftext.org/java/members#ClassMethod'=> EClassClassMethodAdapter.new,
 		'http://www.emftext.org/java/members#Field'=> EClassFieldAdapter.new})
+end
+
 end
