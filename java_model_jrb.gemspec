@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
     "lib/jars/org.emftext.language.java_1.4.0.v201207310007.jar"]
 
   s.add_runtime_dependency 'emf_jruby', '>= 0.1.2'
-  s.add_runtime_dependency 'light_models'
+  s.add_runtime_dependency 'lightmodels'
 end
