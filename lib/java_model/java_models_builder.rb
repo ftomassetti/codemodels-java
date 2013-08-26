@@ -1,11 +1,10 @@
 require 'emf_jruby'
 require 'json'
-require 'zip/zipfilesystem'
-require 'java_to_json_lib'
+require 'java_to_json'
 
 $PWD = File.dirname(__FILE__)
 
-raise "Usage: java_to_json <sources> <models>" unless ARGV.count==2
+raise "Usage: java_models_builder <sources> <models>" unless ARGV.count==2
 
 sources_path = ARGV[0]
 models_path = ARGV[1]
@@ -44,8 +43,6 @@ translate_dir($SRC,$DEST,'java','json') do |src,dest|
 	if not File.exist? dest 
 		puts "<Model from #{src}>"
 	
-		#file = java.io.File.new src
-		# java_resource = JavaResourceUtil.getResource file
 		java_resource = get_resource($resource_set, src)
 
 		raise "wrong number of roots" unless java_resource.contents.size == 1
