@@ -135,11 +135,15 @@ class EClassFieldAdapter
 
 end
 
-def self.jsonize_java_obj(root)
-	LightModels::Serialization::jsonize_obj(root,{
+ADAPTERS_MAP =
+	{
 		'http://www.emftext.org/java/classifiers#Class'=> EClassClassAdapter.new,
 		'http://www.emftext.org/java/members#ClassMethod'=> EClassClassMethodAdapter.new,
-		'http://www.emftext.org/java/members#Field'=> EClassFieldAdapter.new})
+		'http://www.emftext.org/java/members#Field'=> EClassFieldAdapter.new
+	}
+
+def self.jsonize_java_obj(root)
+	LightModels::Serialization::jsonize_obj(root,ADAPTERS_MAP)
 end
 
 end
