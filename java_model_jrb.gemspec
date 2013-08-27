@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   	"lib/java_model_jrb.rb",
     "lib/java_model/java_to_json.rb",
     "lib/java_model/java_models_builder.rb",
+    "lib/java_model/model_building.rb",
   	"lib/jars/org.emftext.commons.antlr3_4_0_3.4.0.v201207310007.jar",
     "lib/jars/org.emftext.commons.layout_1.4.1.v201207310007.jar",
     "lib/jars/org.emftext.language.java.resource.java_1.4.0.v201207310007.jar",

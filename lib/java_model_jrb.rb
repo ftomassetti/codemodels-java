@@ -4,3 +4,4 @@ Dir[curr_dir+"/jars/*.jar"].each do |jar|
 end
 
 require 'java_model/java_to_json'
+require 'java_model/model_building'
