@@ -25,6 +25,7 @@ def self.generate_model_per_file(src,dest,model_ext='java.lm',max_nesting=500)
 end
 
 def self.handle_models_in_dir(src,error_handler=nil,model_handler)
+	raise "Unexisting dir given: #{src}" unless File.exist?(src)
 	LightModels::ModelBuilding.handle_models_in_dir(src,'rb',error_handler,model_handler) do |src|
 		MODULE_PRODUCER.call(src)
 	end
