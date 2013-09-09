@@ -1,6 +1,6 @@
 require 'emf_jruby'
 require 'json'
-require 'java_model_jrb/model_building'
+require 'java-lightmodels/model_building'
 require 'lightmodels'
 
 $PWD = File.dirname(__FILE__)

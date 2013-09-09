@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'java_model_jrb'
+require 'java-lightmodels'
 
 include JavaModel
 

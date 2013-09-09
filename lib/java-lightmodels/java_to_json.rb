@@ -1,9 +1,5 @@
-require 'java'
-require 'rubygems'
 require 'emf_jruby'
 require 'lightmodels'
-
-# TODO put in modules...
 
 module JavaModel
 
@@ -18,7 +14,9 @@ def self.create_resource_set()
 end
 
 def self.get_resource(resource_set,path)
-	resource_set.getResource(org.eclipse.emf.common.util.URI.createFileURI(path),true)
+	r = resource_set.getResource(org.eclipse.emf.common.util.URI.createFileURI(path),true)
+	raise "It should have this method!" unless r.respond_to? :only_child_deep_of_eclass
+	r
 end
 
 def self.eobject_class_qname(clazz)
