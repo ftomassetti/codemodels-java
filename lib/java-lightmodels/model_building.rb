@@ -3,14 +3,18 @@ require 'java-lightmodels/java_to_json'
 
 module JavaModel
 
-@resource_set = JavaModel.create_resource_set()
+class << self
+	attr_accessor :resource_set
+end
+
+self.resource_set = JavaModel.create_resource_set()
 
 SRC_EXTENSION = 'java'
 
 MODEL_EXTENSION = "#{SRC_EXTENSION}.lm"
 
 MODULE_PRODUCER = Proc.new do |src|
-	java_resource = JavaModel.get_resource(@resource_set, src)
+	java_resource = JavaModel.get_resource(JavaModel.resource_set, src)
 	raise "wrong number of roots" unless java_resource.contents.size == 1
 	root = java_resource.contents.get(0)
 	LightModels::Serialization.eobject_to_model(root,JavaModel::ADAPTERS_MAP)
