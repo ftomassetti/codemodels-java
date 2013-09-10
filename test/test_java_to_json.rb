@@ -12,9 +12,8 @@ class TestJavaToJson < Test::Unit::TestCase
 
   def setup
     @dir = File.dirname(__FILE__)
-  	@rs = JavaModel.create_resource_set()
-  	@example_basic = JavaModel.get_resource(@rs,@dir+'/example_basic.java')
-    @example_accessors = JavaModel.get_resource(@rs,@dir+'/example_accessors.java')
+  	@example_basic = JavaModel.parse_file(@dir+'/example_basic.java')
+    @example_accessors = JavaModel.parse_file(@dir+'/example_accessors.java')
   	@eclass_class = org.emftext.language.java.classifiers.ClassifiersPackage.eINSTANCE.getClass_
   end
 

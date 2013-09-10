@@ -3,25 +3,22 @@ require 'lightmodels'
 
 module JavaModel
 
-IJavaOptions = org.emftext.language.java.resource.java.IJavaOptions
+java_import 'japa.parser.JavaParser'
+java_import 'java.io.FileInputStream'
+java_import 'java.io.ByteArrayInputStream'
 
-def self.create_resource_set()
-	resource_set = org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.new
-	resource_set.getLoadOptions.put(IJavaOptions.DISABLE_LAYOUT_INFORMATION_RECORDING,true)
-	rf = org.emftext.language.java.resource.java.mopp.JavaResourceFactory.new
-	resource_set.getResourceFactoryRegistry.getExtensionToFactoryMap.put('java',rf)
-	resource_set
+def self.parse_file(path)
+	fis = FileInputStream.new path
+	root = JavaParser.parse(fis)
+	fis.close
+	root
 end
 
-def self.get_resource(resource_set,path)
-	r = resource_set.getResource(org.eclipse.emf.common.util.URI.createFileURI(path),true)
-	raise "It should have this method!" unless r.respond_to? :only_child_deep_of_eclass
-	r
-end
-
-def self.eobject_class_qname(clazz)
-	raise "not implemented (ParentConcreteClassifier: #{clazz.getParentConcreteClassifier}" if clazz.getParentConcreteClassifier!=clazz
-	clazz.getContainingPackageName.join('.')+"."+clazz.name
+def self.parse_code(code)
+	sis = ByteArrayInputStream.new(code.to_java_bytes)
+	root = JavaParser.parse(sis)
+	sis.close
+	root
 end
 
 def self.all_direct_content(root)

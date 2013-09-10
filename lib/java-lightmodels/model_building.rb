@@ -3,12 +3,6 @@ require 'java-lightmodels/java_to_json'
 
 module JavaModel
 
-class << self
-	attr_accessor :resource_set
-end
-
-self.resource_set = JavaModel.create_resource_set()
-
 SRC_EXTENSION = 'java'
 
 MODEL_EXTENSION = "#{SRC_EXTENSION}.lm"
