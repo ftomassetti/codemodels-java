@@ -37,13 +37,14 @@ module Java
 			if java_super_class.name == 'japa.parser.ast.Node'
 				super_class = RGen::MetamodelBuilder::MMBase
 			else
-				raise "Super class #{java_super_class.name} of #{java_class.name}" unless MappedAstClasses[java_super_class]
+				raise "Super class #{java_super_class.name} of #{java_class.name}. It should be wrapped before!" unless MappedAstClasses[java_super_class]
 				super_class = MappedAstClasses[java_super_class]
 			end
-			puts "Java Super Class: #{java_super_class.name}"
+			#puts "Java Super Class: #{java_super_class.name}"
 			ast_class = java_class.ruby_class
 			# TODO it should extend the right class...
 			c = Class.new(super_class)
+			raise "Already mapped! #{ast_name}" if MappedAstClasses[java_class]
 			MappedAstClasses[java_class] = c
 			Java.const_set simple_java_class_name(ast_class), c
 		end
@@ -74,10 +75,12 @@ module Java
 						if type_ast_class
 							contains_many_uni prop_name, MappedAstClasses[type_ast_class]
 						else
-							puts "#{ast_name}) Property (many) #{prop_name} is else: #{type_name}"
+							raise "#{ast_name}) Property (many) #{prop_name} is else: #{type_name}"
 						end
+					elsif m.return_type.enum?
+						has_attr prop_name, String
 					else
-						puts "#{ast_name}) Property (single) #{prop_name} is else: #{m.return_type}"
+						raise "#{ast_name}) Property (single) #{prop_name} is else: #{m.return_type}"
 					end
 					#type = nil
 					#contains_one_uni prop_name, type
@@ -109,24 +112,98 @@ module Java
 
   	end
 
-  	wrap ['Comment',
-  		'expr.NameExpr',
+  	wrap [
+  		'Comment',
+  		'BlockComment',  		
+  		'LineComment',
   		'ImportDeclaration',
-	  	'expr.AnnotationExpr',
-	  	'PackageDeclaration',
-	  	'body.JavadocComment',
-	  	'body.BodyDeclaration',
-	  	'body.TypeDeclaration',
-	  	'CompilationUnit',
-	  	'type.ClassOrInterfaceType',
+  		'CompilationUnit',
 	  	'TypeParameter',
-	  	'type.Type',
-	  	'body.VariableDeclaratorId',
+	  	'PackageDeclaration',
+	  	
+	  	'body.BodyDeclaration',	  	
+	  	'body.TypeDeclaration',
+  		'body.AnnotationDeclaration',
+  		'body.AnnotationMemberDeclaration',
+	  	'body.JavadocComment',	  	
+  		'body.VariableDeclaratorId',
 	  	'body.Parameter',
-	  	'stmt.BlockStmt',
-	   	
-	   	'body.MethodDeclaration']
+	  	'body.MethodDeclaration',
+	  	'body.ClassOrInterfaceDeclaration',
+	  	'body.EmptyMemberDeclaration',
+	  	'body.EmptyTypeDeclaration',
+	  	'body.EnumConstantDeclaration',
+	  	'body.EnumDeclaration',
+	  	'body.FieldDeclaration',
+	  	'body.InitializerDeclaration',
+	  	'body.VariableDeclarator',
 
+  		'expr.Expression',
+  		'expr.NameExpr',  		
+	  	'expr.AnnotationExpr',
+		'expr.ArrayAccessExpr',
+		'expr.ArrayCreationExpr',
+		'expr.ArrayInitializerExpr',
+		'expr.AssignExpr',
+		'expr.BinaryExpr',
+		'expr.LiteralExpr',
+		'expr.BooleanLiteralExpr',
+		'expr.CastExpr',
+		'expr.StringLiteralExpr',
+		'expr.CharLiteralExpr',
+		'expr.ClassExpr',
+		'expr.ConditionalExpr',
+		'expr.DoubleLiteralExpr',
+		'expr.EnclosedExpr',
+		'expr.FieldAccessExpr',
+		'expr.InstanceOfExpr',
+		'expr.IntegerLiteralExpr',
+		'expr.IntegerLiteralMinValueExpr',
+		'expr.LongLiteralExpr',
+		'expr.LongLiteralMinValueExpr',
+		'expr.MarkerAnnotationExpr',
+		'expr.MemberValuePair',
+		'expr.MethodCallExpr',
+		'expr.NormalAnnotationExpr',
+		'expr.NullLiteralExpr',
+		'expr.ObjectCreationExpr',
+		'expr.QualifiedNameExpr',
+		'expr.SingleMemberAnnotationExpr',
+		'expr.SuperExpr',
+		'expr.ThisExpr',
+		'expr.UnaryExpr',
+		'expr.VariableDeclarationExpr',
+
+	  	'stmt.Statement',
+	  	'stmt.BlockStmt',
+		'stmt.AssertStmt',
+		'stmt.BreakStmt',
+		'stmt.CatchClause',
+		'stmt.ContinueStmt',
+		'stmt.DoStmt',
+		'stmt.EmptyStmt',
+		'stmt.ExplicitConstructorInvocationStmt',
+		'stmt.ExpressionStmt',
+		'stmt.ForeachStmt',
+		'stmt.ForStmt',
+		'stmt.IfStmt',
+		'stmt.LabeledStmt',
+		'stmt.ReturnStmt',
+		'stmt.SwitchEntryStmt',
+		'stmt.SwitchStmt',
+		'stmt.SynchronizedStmt',
+		'stmt.ThrowStmt',
+		'stmt.TryStmt',
+		'stmt.TypeDeclarationStmt',
+		'stmt.WhileStmt',
+
+	  	'type.Type',
+	  	'type.ClassOrInterfaceType',
+	  	'type.PrimitiveType',
+	  	'type.ReferenceType',
+	  	'type.VoidType',
+	  	'type.WildcardType' ]
+	 
 end
 
 end

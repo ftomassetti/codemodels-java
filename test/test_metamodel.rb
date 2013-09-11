@@ -110,7 +110,7 @@ class TestInfoExtraction < Test::Unit::TestCase
 		c = get_metaclass('MethodDeclaration')
 		assert_extend c,'BodyDeclaration'
 		# inherited from body declaration
-		assert get_relation(c,'javaDoc','JabadocComment',:single)
+		assert get_relation(c,'javaDoc','JavadocComment',:single)
 		assert get_relation(c,'annotations','AnnotationExpr',:many)
 		# declared
 		assert get_attr(c,'arrayCount',RGenInt,:single)
@@ -121,6 +121,13 @@ class TestInfoExtraction < Test::Unit::TestCase
 		assert get_relation(c,'throws','NameExpr',:many)
 		assert get_relation(c,'type','Type',:single)
 		assert get_relation(c,'typeParameters','TypeParameter',:many)
+	end
+
+	def test_method_assign_expr
+		c = get_metaclass('AssignExpr')
+		assert get_attr(c,'operator',RGenString,:single)
+		assert get_relation(c,'target','Expression')
+		assert get_relation(c,'value','Expression')
 	end
 
 end
