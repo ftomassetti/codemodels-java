@@ -90,6 +90,11 @@ module Java
 		end
 	end
 
+	def self.get_corresponding_metaclass(node_class)
+		name = simple_java_class_name(node_class)
+		return Java.const_get(name)
+	end
+
 	private
 
 	def self.property_name(java_method)

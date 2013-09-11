@@ -26,7 +26,15 @@ end
 private
 
 def self.convert_to_rgen(node)
-	raise "It shoudl instantiate the corresponding class!!!!"
+	metaclass = get_corresponding_metaclass(node.class)
+	instance = metaclass.new
+	metaclass.ecore.eAllAttributes.each do |attr|
+		puts " * populate #{attr}"
+	end
+	metaclass.ecore.eAllReferences.each do |ref|
+		puts " * populate #{ref}"
+	end
+	instance
 end
 
 end
