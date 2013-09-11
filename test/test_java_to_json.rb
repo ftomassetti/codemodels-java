@@ -1,5 +1,4 @@
 require 'java-lightmodels'
-require 'emf_jruby'
 require 'json'
 
 require "test/unit"
