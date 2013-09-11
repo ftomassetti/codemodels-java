@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.files       = Dir['./lib/*.rb'] + Dir['./lib/java-lightmodels/*.rb'] + Dir['./lib/jars/*.jar']
   s.add_runtime_dependency 'lightmodels'
   s.add_runtime_dependency 'json'
+  s.add_runtime_dependency 'emf_jruby'
 end

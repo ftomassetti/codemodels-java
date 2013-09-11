@@ -15,4 +15,4 @@ raise "Path to models does not exist or it is not a dir: #{models_path}" unless 
 $SRC  = sources_path
 $DEST = models_path
 
-JavaModel.generate_java_models_in_dir($SRC,$DEST)
+LightModels::Java.generate_java_models_in_dir($SRC,$DEST)

@@ -1,4 +1,5 @@
 require 'rgen/metamodel_builder'
+require 'emf_jruby'
 require 'java'
 
 class String

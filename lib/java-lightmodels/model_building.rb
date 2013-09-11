@@ -1,17 +1,16 @@
 require 'lightmodels'
 require 'java-lightmodels/java_to_json'
 
-module JavaModel
+module LightModels
+
+module Java
 
 SRC_EXTENSION = 'java'
 
 MODEL_EXTENSION = "#{SRC_EXTENSION}.lm"
 
 MODULE_PRODUCER = Proc.new do |src|
-	java_resource = JavaModel.get_resource(JavaModel.resource_set, src)
-	raise "wrong number of roots" unless java_resource.contents.size == 1
-	root = java_resource.contents.get(0)
-	LightModels::Serialization.eobject_to_model(root,JavaModel::ADAPTERS_MAP)
+	root = LightModels::Java.parse_file(src)	
 end
 
 def self.generate_models_in_dir(src,dest,model_ext=MODEL_EXTENSION,max_nesting=500)
@@ -31,6 +30,8 @@ def self.handle_models_in_dir(src,error_handler=nil,model_handler)
 	LightModels::ModelBuilding.handle_models_in_dir(src,SRC_EXTENSION,error_handler,model_handler) do |src|
 		MODULE_PRODUCER.call(src)
 	end
+end
+
 end
 
 end
