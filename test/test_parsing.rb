@@ -116,6 +116,18 @@ class TestJavaToJson < Test::Unit::TestCase
     assert_import_decl 'org.apache.struts.action.ActionMapping', @reorder_stories_form.imports[5]
   end
 
+  def test_class_name_and_extends
+    assert_equal 1,@reorder_stories_form.types.count
+
+    c = @reorder_stories_form.types[0]
+    assert_class ClassOrInterfaceDeclaration, c
+    assert_equal 'ReorderStoriesForm',c.name
+    assert_equal 0, c.implements.count
+    assert_equal 1, c.extends.count
+    assert_class ClassOrInterfaceType, c.extends[0]
+    assert_equal 'AbstractEditorForm', c.extends[0].name
+  end
+
   # def test_getter_not_boolean_is_marked
   #   c = @example_accessors.only_child_deep_of_type(@metaclass_class)
 

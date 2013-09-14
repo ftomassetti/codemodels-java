@@ -13,6 +13,18 @@ java_import 'japa.parser.JavaParser'
 java_import 'java.io.FileInputStream'
 java_import 'java.io.ByteArrayInputStream'
 
+# node tree contains the original 
+def self.corresponding_node(model_element,node_tree)
+	puts "I should get the parent of me #{mode}"
+end
+
+def self.corresponding_node_from_code(model_element,code)
+	sis = ByteArrayInputStream.new(code.to_java_bytes)
+	node_tree = JavaParser.parse(sis)
+	sis.close
+	corresponding_node(model_element,node_tree)
+end
+
 def self.parse_file(path)
 	fis = FileInputStream.new path
 	root = JavaParser.parse(fis)
