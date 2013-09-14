@@ -6,6 +6,7 @@ require "test_helper"
  
 class TestJavaToJson < Test::Unit::TestCase
 
+  include TestHelper
   include LightModels::Java
 
   class << self
@@ -72,7 +73,47 @@ class TestJavaToJson < Test::Unit::TestCase
     assert_not_nil @reorder_stories_form.package
 
     # package is com.technoetic.xplanner.forms
-    assert_còass
+    assert_class PackageDeclaration, @reorder_stories_form.package
+    curr_part = @reorder_stories_form.package.name
+    ['forms','xplanner','technoetic'].each do |name|
+      assert_class QualifiedNameExpr,  curr_part
+      assert_equal name, curr_part.name
+      curr_part = curr_part.qualifier
+    end
+    assert_class NameExpr,  curr_part
+    assert_equal 'com', curr_part.name
+  end
+
+  # TODO check also comments
+
+  def assert_name_expr(exp,name_expr)
+    parts = (exp.split '.').reverse
+    first_parts = parts[0...-1]
+
+    curr_part = name_expr
+    parts[0...-1].each do |name|
+      assert_class QualifiedNameExpr,  curr_part
+      assert_equal name, curr_part.name, "qualified name expected to have #{name} here"
+      curr_part = curr_part.qualifier
+    end
+    assert_class NameExpr, curr_part
+    assert_equal parts.last, curr_part.name
+  end
+
+  def assert_import_decl(exp,id)
+    assert_class ImportDeclaration, id
+    assert_name_expr exp, id.name
+  end
+
+  def test_imports
+    assert_equal 6,@reorder_stories_form.imports.count
+
+    assert_import_decl 'java.util.ArrayList', @reorder_stories_form.imports[0]
+    assert_import_decl 'java.util.Iterator', @reorder_stories_form.imports[1]
+    assert_import_decl 'java.util.List', @reorder_stories_form.imports[2]
+    assert_import_decl 'javax.servlet.http.HttpServletRequest', @reorder_stories_form.imports[3]
+    assert_import_decl 'org.apache.struts.action.ActionErrors', @reorder_stories_form.imports[4]
+    assert_import_decl 'org.apache.struts.action.ActionMapping', @reorder_stories_form.imports[5]
   end
 
   # def test_getter_not_boolean_is_marked
