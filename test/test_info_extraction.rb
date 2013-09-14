@@ -38,6 +38,14 @@ class TestInfoExtraction < Test::Unit::TestCase
 		assert_equal [''],InfoExtraction.camel_to_words('')
 	end
 
+	def assert_map_equal(exp,act,model=nil)
+		fail "Unexpected keys #{act.keys-exp.keys}. Actual map: #{act}" if (act.keys-exp.keys).count > 0
+		fail "Missing keys #{exp.keys-act.keys}. Actual map: #{act}" if (exp.keys-act.keys).count > 0
+		exp.each do |k,exp_v|
+			fail "For #{k} expected #{exp_v}, found #{act[k]}, model=#{model}" if act[k]!=exp_v
+		end
+	end
+
 	def test_proper_terms_extraction_on_bean
 		code = %q{
 			class MyBean {
@@ -65,28 +73,29 @@ class TestInfoExtraction < Test::Unit::TestCase
 			}
 		}
 		exp_terms = {
-			'MyBean' => 4,
-			'Int'    => 1,
-			'String' => 2,
-			'notSoGoodFieldName' => 14,
+			'mybean' => 4,
+			'int'    => 1,
+			'string' => 5,
+			'notsogoodfieldname' => 13,
 			'get' => 1,
 			'set' => 1,
-			'toString' => 1,
 			'MyBean [notSoGoodFieldName:' => 1,
 			']' => 1,
-			'hashCode' => 1,
-			'Boolean' => 1,
-			'equals' => 1,
-			'Object' => 1,
-			'obj' => 4,
+			'hashcode' => 2,
+			'to' => 1,
+			'boolean' => 1,
+			'equals' => 2,
+			'object' => 1,
+			'obj' => 5,
 			'true' => 1,
-			'false' => 1,
-			'this' => 2,
+			'false' => 2,
+			#'this' => 2,
 			'other' => 3
 		}
 		model_node = Java.parse_code(code)
 		terms_map = InfoExtraction.terms_map(model_node)
-		assert_equal exp_terms,terms_map
+		#puts model_node
+		assert_map_equal exp_terms,terms_map,LightModels::Serialization.jsonize_obj(model_node)
 	end
 
 end

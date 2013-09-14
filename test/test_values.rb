@@ -13,7 +13,7 @@ class TestValues < Test::Unit::TestCase
 		#map.delete true
 		#map.delete false
 
-		assert_equal exp.count,map.count, "Expected to have keys: #{exp.keys}, it has #{map.keys}. Unexpected keys: #{map.keys - exp.keys}, Missing keys: #{exp.keys - map.keys}"
+		assert_equal exp.count,map.count, "Expected to have keys: #{exp.keys}, it has #{map.keys}. Unexpected keys: #{map.keys - exp.keys}, Missing keys: #{exp.keys - map.keys}. Model: #{model.inspect}"
 		exp.each do |k,v|
 			assert_equal exp[k],map[k], "Expected #{k} to have #{exp[k]} instances, it has #{map[k]}. Keys of the map: #{map.keys}"
 		end
@@ -240,5 +240,128 @@ class TestValues < Test::Unit::TestCase
 			'Double' => 1,
 			true => 1 })
 	end
+
+	def test_an_entire_class
+		code = %q{
+			class MyBean {
+				private String notSoGoodFieldName;
+				
+				public String getNotSoGoodFieldName(){ return notSoGoodFieldName; }
+				
+				public void setNotSoGoodFieldName(String notSoGoodFieldName){ this.notSoGoodFieldName = notSoGoodFieldName; }
+				
+				public String toString(){
+					return "MyBean [notSoGoodFieldName: "+notSoGoodFieldName+"]";
+				}
+				
+				public int hashCode(){
+					return notSoGoodFieldName.hashCode();
+				}
+				
+				public boolean equals(Object obj){
+					if(this == obj) return true;
+					if((obj == null) || !(obj instanceof MyBean)) return false;		
+					MyBean other = (MyBean)obj;
+					if (this.notSoGoodFieldName==null && !(other.notSoGoodFieldName==null)) return false;
+					return this.notSoGoodFieldName.equals(other.notSoGoodFieldName);
+				}
+			}			
+		}
+		assert_code_map_to(code,{
+			'MyBean' => 4,
+			'Int'    => 1,
+			'String' => 4,
+			'notSoGoodFieldName' => 11,
+			'getNotSoGoodFieldName' => 1,
+			'setNotSoGoodFieldName' => 1,
+			'MyBean [notSoGoodFieldName: ' => 1,
+			']' => 1,
+			'hashCode' => 2,
+			'toString' => 1,
+			'Boolean' => 1,
+			'equals' => 2,
+			'Object' => 1,
+			'obj' => 5,
+			true => 1,
+			false => 2,
+			'other' => 3 })
+	end
+
+	def test_an_entire_class_field_1
+		code = %q{
+				private String notSoGoodFieldName;
+		}
+		assert_method_code_map_to(code,{
+			'String' => 1,
+			'notSoGoodFieldName' => 1 })
+	end
+
+	def test_an_entire_class_method_1
+		code = %q{
+			public String getNotSoGoodFieldName(){ return notSoGoodFieldName; }		
+		}
+		assert_method_code_map_to(code,{
+			'String' => 1,
+			'notSoGoodFieldName' => 1,
+			'getNotSoGoodFieldName' => 1 })
+	end
+
+	def test_an_entire_class_method_2
+		code = %q{			
+				public void setNotSoGoodFieldName(String notSoGoodFieldName){ this.notSoGoodFieldName = notSoGoodFieldName; }
+			}
+		assert_method_code_map_to(code,{
+			'String' => 1,
+			'notSoGoodFieldName' => 3,
+			'setNotSoGoodFieldName' => 1 })
+	end
+
+	def test_an_entire_class_method_3
+		code = %q{
+				public String toString(){
+					return "MyBean [notSoGoodFieldName: "+notSoGoodFieldName+"]";
+				}
+			}			
+		assert_method_code_map_to(code,{
+			'String' => 1,
+			'notSoGoodFieldName' => 1,
+			'MyBean [notSoGoodFieldName: ' => 1,
+			']' => 1,
+			'toString' => 1 })
+	end
+
+	def test_an_entire_class_method_4
+		code = %q{
+				public int hashCode(){
+					return notSoGoodFieldName.hashCode();
+				}
+			}			
+		assert_method_code_map_to(code,{
+			'Int'    => 1,
+			'notSoGoodFieldName' => 1,
+			'hashCode' => 2 })
+	end
+
+	def test_an_entire_class_method_5
+		code = %q{
+				public boolean equals(Object obj){
+					if(this == obj) return true;
+					if((obj == null) || !(obj instanceof MyBean)) return false;		
+					MyBean other = (MyBean)obj;
+					if (this.notSoGoodFieldName==null && !(other.notSoGoodFieldName==null)) return false;
+					return this.notSoGoodFieldName.equals(other.notSoGoodFieldName);
+				}
+		}
+		assert_method_code_map_to(code,{
+			'MyBean' => 3,
+			'notSoGoodFieldName' => 4,
+			'Boolean' => 1,
+			'equals' => 2,
+			'Object' => 1,
+			'obj' => 5,
+			true => 1,
+			false => 2,
+			'other' => 3 })
+	end				
 
 end

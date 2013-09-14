@@ -57,7 +57,7 @@ module Java
 			ast_class = java_class.ruby_class
 			c = MappedAstClasses[java_class]
 
-			props_to_ignore = ['modifiers','arrayCount','operator','comments','javaDoc']
+			props_to_ignore = ['modifiers','arrayCount','operator','comments','javaDoc','varArgs','interface']
 				
 			c.class_eval do
 				ast_class.java_class.declared_instance_methods.select {|m| m.name.start_with?('get')||m.name.start_with?('is') }.each do |m|

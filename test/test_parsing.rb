@@ -128,6 +128,39 @@ class TestJavaToJson < Test::Unit::TestCase
     assert_equal 'AbstractEditorForm', c.extends[0].name
   end
 
+  def test_parse_equals_method
+    code = %q{
+      class A {
+        public boolean equals(Object obj){
+          if(this == obj) return true;
+          if((obj == null) || !(obj instanceof MyBean)) return false;   
+          MyBean other = (MyBean)obj;
+          if (this.notSoGoodFieldName==null && !(other.notSoGoodFieldName==null)) return false;
+          return this.notSoGoodFieldName.equals(other.notSoGoodFieldName);
+        }
+      }
+    }
+    model = LightModels::Java.parse_code(code)
+    m = model.types[0].members[0]
+    assert_class MethodDeclaration,m
+    assert_class BlockStmt,m.body
+    
+    assert_class IfStmt,m.body.stmts[0]
+    assert_class ReturnStmt,m.body.stmts[0].thenStmt
+    assert_class BooleanLiteralExpr,m.body.stmts[0].thenStmt.expr
+    assert_equal true,m.body.stmts[0].thenStmt.expr.value
+
+    assert_class IfStmt,m.body.stmts[1]
+    assert_class ReturnStmt,m.body.stmts[1].thenStmt
+    assert_class BooleanLiteralExpr,m.body.stmts[1].thenStmt.expr
+    assert_equal false,m.body.stmts[1].thenStmt.expr.value
+
+    assert_class IfStmt,m.body.stmts[3]
+    assert_class ReturnStmt,m.body.stmts[3].thenStmt
+    assert_class BooleanLiteralExpr,m.body.stmts[3].thenStmt.expr
+    assert_equal false,m.body.stmts[3].thenStmt.expr.value
+  end
+
   # def test_getter_not_boolean_is_marked
   #   c = @example_accessors.only_child_deep_of_type(@metaclass_class)
 

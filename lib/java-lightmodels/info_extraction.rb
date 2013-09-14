@@ -99,10 +99,10 @@ class TermsBreaker
 				words = InfoExtraction.camel_to_words(value)				
 				first_words = words[0...-1]
 				#puts "Recording that #{first_words[0]} is preceeded by #{:start} #{c} times"
-				instance.inv_sequences[first_words[0].downcase][:start] += c
+				instance.inv_sequences[words[0].downcase][:start] += c
 				first_words.each_with_index do |w,i|
 					instance.sequences[w.downcase][words[i+1].downcase] += c
-					instance.inv_sequences[words[i+1.downcase]][w.downcase] += c
+					instance.inv_sequences[words[i+1].downcase][w.downcase] += c
 				end
 				last_word = words.last
 				instance.sequences[last_word.downcase][:end] += c
@@ -138,9 +138,10 @@ class TermsBreaker
 	end
 
 	def frequent_sequence?(w1,w2)
-		puts "Checking if #{w1}-#{w2} is freq sequence:"
-		puts "\tstraight: #{frequent_straight_sequence?(w1,w2)}"
-		puts "\tinverse: #{frequent_inverse_sequence?(w2,w1)}"
+		return false unless w2
+		#puts "Checking if #{w1}-#{w2} is freq sequence:"
+		#puts "\tstraight: #{frequent_straight_sequence?(w1,w2)}"
+		#puts "\tinverse: #{frequent_inverse_sequence?(w2,w1)}"
 		frequent_straight_sequence?(w1,w2) && frequent_inverse_sequence?(w2,w1)
 	end
 
@@ -167,7 +168,9 @@ class TermsBreaker
 			term += words[end_term]
 		end
 		return [term] if end_term==(words.count-1)
-		[term] + words[end_term..-1]
+		#puts "Words #{words.count}"
+		#puts "End term: #{end_term}"
+		[term] + group_words_in_terms(words[(end_term+1)..-1])
 	end
 
 end
@@ -187,6 +190,7 @@ def self.terms_map(model_node,context=nil)
 
 	ser_model_node = LightModels::Serialization.jsonize_obj(model_node)
 	values_map = LightModels::Query.collect_values_with_count(ser_model_node)
+	#puts "values #{values_map}"
 	terms_map = Hash.new {|h,k| h[k]=0}
 	values_map.each do |v,n|
 		terms_breaker.terms_in_value(v).each do |t|
