@@ -2,6 +2,7 @@ require 'java-lightmodels'
 require 'json'
 
 require "test/unit"
+require "test_helper"
  
 class TestJavaToJson < Test::Unit::TestCase
 
@@ -15,7 +16,8 @@ class TestJavaToJson < Test::Unit::TestCase
     @dir = File.dirname(__FILE__)
   	@example_basic = LightModels::Java.parse_file(@dir+'/example_basic.java')
     @example_accessors = LightModels::Java.parse_file(@dir+'/example_accessors.java')
-    @metaclass_class = LightModels::Java::ClassOrInterfaceDeclaration
+    @reorder_stories_form = LightModels::Java.parse_file(@dir+'/ReorderStoriesForm.java')
+    @metaclass_class = LightModels::Java::ClassOrInterfaceDeclaration    
   end
 
   def test_model_contains_class
@@ -64,6 +66,13 @@ class TestJavaToJson < Test::Unit::TestCase
 
   def get_method(c,method_name)
     c.children_deep_of_type(MethodDeclaration).select { |m| m.name == method_name }    
+  end
+
+  def test_package
+    assert_not_nil @reorder_stories_form.package
+
+    # package is com.technoetic.xplanner.forms
+    assert_còass
   end
 
   # def test_getter_not_boolean_is_marked
