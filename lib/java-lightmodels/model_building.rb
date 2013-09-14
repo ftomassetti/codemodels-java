@@ -11,6 +11,7 @@ MODEL_EXTENSION = "#{SRC_EXTENSION}.lm"
 
 MODULE_PRODUCER = Proc.new do |src|
 	root = LightModels::Java.parse_file(src)	
+	LightModels::Serialization.rgenobject_to_model(root)
 end
 
 def self.generate_models_in_dir(src,dest,model_ext=MODEL_EXTENSION,max_nesting=500)
