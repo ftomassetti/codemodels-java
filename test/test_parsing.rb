@@ -10,7 +10,7 @@ class TestJavaToJson < Test::Unit::TestCase
   include LightModels::Java
 
   class << self
-    include JavaModel
+    #include JavaModel
   end
 
   def setup

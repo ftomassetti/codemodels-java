@@ -4,8 +4,6 @@
 require 'test/unit'
 require 'java-lightmodels'
 
-include JavaModel
-
 class TestValues < Test::Unit::TestCase
 
 	include LightModels
