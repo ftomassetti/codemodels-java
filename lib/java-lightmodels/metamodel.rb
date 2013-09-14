@@ -140,6 +140,7 @@ module Java
 	  	'body.EnumDeclaration',
 	  	'body.FieldDeclaration',
 	  	'body.InitializerDeclaration',
+	  	'body.ConstructorDeclaration',
 	  	'body.VariableDeclarator',
 
   		'expr.Expression',
