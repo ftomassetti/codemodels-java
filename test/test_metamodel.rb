@@ -77,7 +77,7 @@ class TestInfoExtraction < Test::Unit::TestCase
 
 	def test_compilatioun_unit_has_relations
 		cu = get_metaclass('CompilationUnit')
-		assert get_relation(cu,'comments')
+		#assert get_relation(cu,'comments')
 		assert get_relation(cu,'imports')
 		assert get_relation(cu,'package')
 		assert get_relation(cu,'types')
@@ -96,13 +96,13 @@ class TestInfoExtraction < Test::Unit::TestCase
 	def test_type_declaration
 		c = get_metaclass('TypeDeclaration')
 		assert get_relation(c,'members','BodyDeclaration',:many)
-		assert get_attr(c,'modifiers',RGenInt,:single)
+		#assert get_attr(c,'modifiers',RGenInt,:single) #ignored!
 		assert get_attr(c,'name',RGenString,:single)
 	end
 
 	def test_body_declaration
 		c = get_metaclass('BodyDeclaration')
-		assert get_relation(c,'javaDoc','JavadocComment',:single)
+		#assert get_relation(c,'javaDoc','JavadocComment',:single)
 		assert get_relation(c,'annotations','AnnotationExpr',:many)
 	end
 
@@ -110,12 +110,13 @@ class TestInfoExtraction < Test::Unit::TestCase
 		c = get_metaclass('MethodDeclaration')
 		assert_extend c,'BodyDeclaration'
 		# inherited from body declaration
-		assert get_relation(c,'javaDoc','JavadocComment',:single)
+		#assert get_relation(c,'javaDoc','JavadocComment',:single)
 		assert get_relation(c,'annotations','AnnotationExpr',:many)
 		# declared
-		assert get_attr(c,'arrayCount',RGenInt,:single)
-		assert get_relation(c,'body','BlockStmt',:single)
-		assert get_attr(c,'modifiers',RGenInt,:single)
+		# these two are being ignored
+		# assert get_attr(c,'arrayCount',RGenInt,:single)
+		# assert get_attr(c,'modifiers',RGenInt,:single)
+		assert get_relation(c,'body','BlockStmt',:single)		
 		assert get_attr(c,'name',RGenString,:single)
 		assert get_relation(c,'parameters','Parameter',:many)
 		assert get_relation(c,'throws','NameExpr',:many)
@@ -125,7 +126,7 @@ class TestInfoExtraction < Test::Unit::TestCase
 
 	def test_method_assign_expr
 		c = get_metaclass('AssignExpr')
-		assert get_attr(c,'operator',RGenString,:single)
+		# assert get_attr(c,'operator',RGenString,:single) # ignored
 		assert get_relation(c,'target','Expression')
 		assert get_relation(c,'value','Expression')
 	end

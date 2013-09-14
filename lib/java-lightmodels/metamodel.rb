@@ -1,6 +1,7 @@
 require 'rgen/metamodel_builder'
 require 'emf_jruby'
 require 'java'
+require 'lightmodels'
 
 class String
 	def remove_postfix(postfix)
@@ -55,33 +56,37 @@ module Java
 			java_class = ::Java::JavaClass.for_name("japa.parser.ast.#{ast_name}")
 			ast_class = java_class.ruby_class
 			c = MappedAstClasses[java_class]
+
+			props_to_ignore = ['modifiers','arrayCount','operator','comments','javaDoc']
 				
 			c.class_eval do
 				ast_class.java_class.declared_instance_methods.select {|m| m.name.start_with?('get')||m.name.start_with?('is') }.each do |m|
 					prop_name = LightModels::Java.property_name(m)
-					if m.return_type==JavaString
-						has_attr prop_name, String
-					elsif m.return_type==JavaBoolean
-						has_attr prop_name, RGen::MetamodelBuilder::DataTypes::Boolean
-					elsif m.return_type==JavaInt
-						has_attr prop_name, Integer
-					elsif MappedAstClasses.has_key?(m.return_type)
-						contains_one_uni prop_name, MappedAstClasses[m.return_type]
-					elsif m.return_type==JavaList
-	#					puts "Property #{prop_name} is a list"
-						type_name = LightModels::Java.get_generic_param(m.to_generic_string)
-						last = type_name.index '>'
-						type_name = type_name[0..last-1]
-						type_ast_class = MappedAstClasses.keys.find{|k| k.name==type_name}
-						if type_ast_class
-							contains_many_uni prop_name, MappedAstClasses[type_ast_class]
+					unless props_to_ignore.include?(prop_name)
+						if m.return_type==JavaString
+							has_attr prop_name, String
+						elsif m.return_type==JavaBoolean
+							has_attr prop_name, RGen::MetamodelBuilder::DataTypes::Boolean
+						elsif m.return_type==JavaInt
+							has_attr prop_name, Integer
+						elsif MappedAstClasses.has_key?(m.return_type)
+							contains_one_uni prop_name, MappedAstClasses[m.return_type]
+						elsif m.return_type==JavaList
+		#					puts "Property #{prop_name} is a list"
+							type_name = LightModels::Java.get_generic_param(m.to_generic_string)
+							last = type_name.index '>'
+							type_name = type_name[0..last-1]
+							type_ast_class = MappedAstClasses.keys.find{|k| k.name==type_name}
+							if type_ast_class
+								contains_many_uni prop_name, MappedAstClasses[type_ast_class]
+							else
+								raise "#{ast_name}) Property (many) #{prop_name} is else: #{type_name}"
+							end
+						elsif m.return_type.enum?
+							has_attr prop_name, String
 						else
-							raise "#{ast_name}) Property (many) #{prop_name} is else: #{type_name}"
+							raise "#{ast_name}) Property (single) #{prop_name} is else: #{m.return_type}"
 						end
-					elsif m.return_type.enum?
-						has_attr prop_name, String
-					else
-						raise "#{ast_name}) Property (single) #{prop_name} is else: #{m.return_type}"
 					end
 					#type = nil
 					#contains_one_uni prop_name, type
@@ -90,8 +95,10 @@ module Java
 		end
 	end
 
-	def self.get_corresponding_metaclass(node_class)
+	def self.get_corresponding_metaclass(node)
+		node_class = node.class
 		name = simple_java_class_name(node_class)
+		name = "#{(node.operator.name).proper_capitalize}BinaryExpr" if name=='BinaryExpr'
 		return Java.const_get(name)
 	end
 
@@ -208,6 +215,15 @@ module Java
 	  	'type.ReferenceType',
 	  	'type.VoidType',
 	  	'type.WildcardType' ]
+
+	['Or','And','BinOr','BinAnd', 'Xor',
+		'Equals','NotEquals',
+		'Less','Greater','LessEquals','GreaterEquals',
+		'LShift','RSignedShift','RUnsignedShift',
+		'Plus', 'Minus', 'Times','Divide','Remainder'].each do |op|
+		c = Class.new(BinaryExpr)
+		Java.const_set "#{op}BinaryExpr", c
+	end
 	 
 end
 

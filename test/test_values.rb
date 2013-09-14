@@ -10,12 +10,12 @@ class TestValues < Test::Unit::TestCase
 
 	include LightModels
 
-	def assert_map(exp,map)
+	def assert_map(exp,map,model)
 		# ignore boolean values...
 		#map.delete true
 		#map.delete false
 
-		#assert_equal exp.count,map.count, "Expected to have keys: #{exp.keys}, it has #{map.keys}"
+		assert_equal exp.count,map.count, "Expected to have keys: #{exp.keys}, it has #{map.keys}. Unexpected keys: #{map.keys - exp.keys}, Missing keys: #{exp.keys - map.keys}"
 		exp.each do |k,v|
 			assert_equal exp[k],map[k], "Expected #{k} to have #{exp[k]} instances, it has #{map[k]}. Keys of the map: #{map.keys}"
 		end
@@ -25,14 +25,14 @@ class TestValues < Test::Unit::TestCase
 		r = Java.parse_code(code)
 		ser = LightModels::Serialization.jsonize_obj(r)
 		map = LightModels::Query.collect_values_with_count(ser)
-		assert_map(exp,map)
+		assert_map(exp,map,ser)
 	end
 
 	def assert_method_code_map_to(code,exp)
 		r = Java.parse_code("class A { #{code} }")
 		ser = LightModels::Serialization.jsonize_obj(r.types[0].members[0])
 		map = LightModels::Query.collect_values_with_count(ser)
-		assert_map(exp,map)
+		assert_map(exp,map,ser)
 	end
 
 	def test_local_variables
@@ -44,7 +44,7 @@ class TestValues < Test::Unit::TestCase
 				}
 			}
 		}
-		assert_code_map_to(code, {'MyClass'=> 1, 'm' => 1, 'a' => 1, 'b' => 1, 'qwerty' => 1, 'String' => 1})
+		assert_code_map_to(code, {'Int'=>1, 'MyClass'=> 1, 'm' => 1, 'a' => 1, 'b' => 1, 'qwerty' => 1, 'String' => 1})
 	end
 
 	def test_random_method_1
@@ -89,13 +89,15 @@ class TestValues < Test::Unit::TestCase
 			'ServletException' => 1,
 			'MessageResources' => 2,
 			'messageResource' => 2,
+			'strutsMessageSource' => 1,
 			'WebApplicationContextUtils' => 1,
 			'getRequiredWebApplicationContext' => 1,
 			'getServletContext' => 2,
 			'getBean' => 1,
 			'setAttribute' => 1,
 			'Globals' => 1,
-			'MESSAGES_KEY' => 1 })
+			'MESSAGES_KEY' => 1,
+			'Override' => 1 })
 	end 
 
 	def test_random_method_3
@@ -112,7 +114,9 @@ class TestValues < Test::Unit::TestCase
 			'String' => 1,
 			'getPagingFoundSomeItems' => 1,
 			'getProperty' => 1,
-			'PROPERTY_STRING_PAGING_FOUND_SOMEITEMS' => 1 })
+			'PROPERTY_STRING_PAGING_FOUND_SOMEITEMS' => 1,
+			#{}"\n\t\t\t     * Getter for the <code>PROPERTY_STRING_PAGING_FOUND_SOMEITEMS</code> property.\n\t\t\t     * @return String\n\t\t\t     " => 1
+			 })
 
 	end
 
@@ -179,7 +183,8 @@ class TestValues < Test::Unit::TestCase
 		}
 		assert_method_code_map_to(code,{
 			'LobHelper' => 1,
-			'getLobHelper' => 1 })
+			'getLobHelper' => 1,
+			'Override' => 1 })
 	end
 	
 	def test_random_method_8
@@ -193,7 +198,8 @@ class TestValues < Test::Unit::TestCase
 			'Math' => 1,
 			'round' => 1,
 			'getHeight' => 1,
-			'0.91' => 1 })
+			'0.91' => 1,
+			'Int' => 2 })
 	end
 	
 	def test_random_method_9
@@ -203,7 +209,8 @@ class TestValues < Test::Unit::TestCase
 		assert_method_code_map_to(code,{
 			'Collection' => 1,
 			'getCurrentCompletedTasksForPerson' => 1,
-			'personId' => 1 })		
+			'personId' => 1,
+			'Int' => 1 })		
 	end
 	
 	def test_random_method_10
@@ -230,7 +237,10 @@ class TestValues < Test::Unit::TestCase
 			'Task' => 1,
 			'task' => 2,
 			'getEstimatedHours' => 1,
-			'aggregateByGroup' => 1 })
+			'aggregateByGroup' => 1,
+			'Override' => 1,
+			'Double' => 1,
+			true => 1 })
 	end
 
 end
