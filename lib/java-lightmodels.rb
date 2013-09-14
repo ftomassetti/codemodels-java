@@ -4,6 +4,6 @@ Dir[curr_dir+"/jars/*.jar"].each do |jar|
 end
 
 require 'java-lightmodels/metamodel'
-require 'java-lightmodels/java_to_json'
+require 'java-lightmodels/parser'
 require 'java-lightmodels/model_building'
 require 'java-lightmodels/info_extraction'

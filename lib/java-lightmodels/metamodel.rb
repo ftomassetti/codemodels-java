@@ -95,6 +95,8 @@ module Java
 		return Java.const_get(name)
 	end
 
+	PROP_ADAPTERS = Hash.new {|h,k| h[k] = {} }
+
 	private
 
 	def self.property_name(java_method)
@@ -112,10 +114,6 @@ module Java
   		return generic_str.remove_prefix('public java.util.List<') if generic_str.start_with?('public java.util.List<')
   		return generic_str.remove_prefix('public final java.util.List<') if generic_str.start_with?('public final java.util.List<')
   		nil
-  	end
-
-  	def self.declared_methods(java_class)
-
   	end
 
   	wrap [

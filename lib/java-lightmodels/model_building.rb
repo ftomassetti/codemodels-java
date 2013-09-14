@@ -1,5 +1,5 @@
 require 'lightmodels'
-require 'java-lightmodels/java_to_json'
+require 'java-lightmodels/parser'
 
 module LightModels
 
