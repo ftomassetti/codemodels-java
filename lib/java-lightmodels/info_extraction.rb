@@ -121,7 +121,7 @@ class TermsBreaker
 			all_sequences_of_w1 += v
 		end
 		sequences_w1_w2 = @sequences[w1][w2]
-		(sequences_w1_w2.to_f/all_sequences_of_w1.to_f)>=0.33
+		(sequences_w1_w2.to_f/all_sequences_of_w1.to_f)>0.5
 	end
 
 	def frequent_inverse_sequence?(w1,w2)
@@ -134,7 +134,7 @@ class TermsBreaker
 			all_inv_sequences_of_w1 += v
 		end
 		inv_sequences_w1_w2 = @inv_sequences[w1][w2]
-		(inv_sequences_w1_w2.to_f/all_inv_sequences_of_w1.to_f)>=0.33
+		(inv_sequences_w1_w2.to_f/all_inv_sequences_of_w1.to_f)>0.5
 	end
 
 	def frequent_sequence?(w1,w2)

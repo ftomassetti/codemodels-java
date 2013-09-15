@@ -224,6 +224,56 @@ class TestInfoExtraction < Test::Unit::TestCase
 			'actionbuttonstag'=>3,'showonly'=>1,
 			'withicon' => 1}, InfoExtraction.terms_map(m))
 
+		m = model_node.types[0].members[4]
+		assert_equal 'setPageContext', m.name
+		assert_map_equal({'set'=>3, 'pagecontext'=>4,
+			'context'=>3, 'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+
+		m = model_node.types[0].members[5]
+		assert_equal 'setId', m.name
+		assert_map_equal({'set'=>2, 'id'=>3, 'string'=>1,
+			's'=>3,'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+
+		m = model_node.types[0].members[6]
+		assert_equal 'getName', m.name
+		assert_map_equal({'get'=>2, 'name'=>2, 'string'=>1,
+			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+
+		m = model_node.types[0].members[7]
+		assert_equal 'setName', m.name
+		assert_map_equal({'set'=>2, 'name'=>4, 'string'=>1,
+			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+
+		m = model_node.types[0].members[8]
+		assert_equal 'getScope', m.name
+		assert_map_equal({'get'=>2, 'scope'=>2, 'string'=>1,
+			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+
+		m = model_node.types[0].members[9]
+		assert_equal 'setScope', m.name
+		assert_map_equal({'set'=>2, 'scope'=>4, 'string'=>1,
+			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+
+		m = model_node.types[0].members[10]
+		assert_equal 'doStartTag', m.name
+		assert_map_equal({'int'=>2, 'do'=>3, 'start'=>3,
+			'tag'=>7,
+			'actionbuttonstag'=>1, 'jspexception'=>2,
+			'writable'=>3, 'parent'=>1,'parenttable'=>2,
+			'get'=>3,'is'=>1,'SKIP_BODY'=>2,'constants'=>2,
+			'ATTRIBUTE_NOWRAP'=>2,'true'=>1,'attributemap'=>2,
+			'containskey'=>1,'put'=>1,
+			'status'=>3,'exception'=>1,'e'=>2}, InfoExtraction.terms_map(m))
+
+		m = model_node.types[0].members[11]
+		assert_equal 'doAfterBody', m.name
+
+		m = model_node.types[0].members[12]
+		assert_equal 'doEndTag', m.name
+
+		m = model_node.types[0].members[13]
+		assert_equal 'release', m.name
+
 		raise "Check ALL the other methods and break this tests in separate tests"
 	end
 
