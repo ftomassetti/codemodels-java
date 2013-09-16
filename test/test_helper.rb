@@ -8,10 +8,10 @@ def relative_path(path)
 	File.join(File.dirname(__FILE__),path)
 end
 
-def test_data(filename)
+def read_test_data(filename)
 	dir = File.dirname(__FILE__)
 	dir = File.join(dir,'data')
-	path = File.join(dir,path)
+	path = File.join(dir,filename)
 	IO.read(path)
 end
 

@@ -2,7 +2,7 @@ require 'test/unit'
 require 'java-lightmodels'
 require 'rgen/ecore/ecore'
 
-class TestInfoExtraction < Test::Unit::TestCase
+class TestMetamodel < Test::Unit::TestCase
 
 	RGenString = RGen::ECore::EString
 	RGenBoolean = RGen::ECore::EBoolean

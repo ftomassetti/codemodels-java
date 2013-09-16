@@ -4,7 +4,7 @@ require 'json'
 require "test/unit"
 require "test_helper"
  
-class TestJavaToJson < Test::Unit::TestCase
+class TestParsing < Test::Unit::TestCase
 
   include TestHelper
   include LightModels::Java

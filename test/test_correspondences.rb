@@ -10,14 +10,6 @@ class TestCorrespondences < Test::Unit::TestCase
   include LightModels
   include LightModels::Java
 
-  class << self
-   # include JavaModel
-  end
-
-  def setup
-    
-  end
-
   def test_correspondance_of_field
     code = "class A extends B { int fieldB; int getB(){ return fieldB; } }"
     nt = Java.node_tree_from_code(code)

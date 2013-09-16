@@ -9,8 +9,10 @@ class TestInfoExtraction < Test::Unit::TestCase
 	include TestHelper
 
 	def setup
-		actionbuttonscomumntag_code = test_data('ActionButtonsColumnTag.java')
-		@actionbuttonscomumntag_model_node = Java.parse_code(actionbuttonscomumntag_code)
+		@actionbuttonscomumntag_model_node = Java.parse_code(read_test_data('ActionButtonsColumnTag.java'))
+		@csvexporter_model_node            = Java.parse_code(read_test_data('CsvExporter.java'))
+		@authconstraint_model_node         = Java.parse_code(read_test_data('AuthConstraint.java'))
+		@testiteration_model_node          = Java.parse_code(read_test_data('TestIteration.java'))
 	end
 
 	def test_camel_to_words_single_word_upcase
@@ -208,6 +210,53 @@ class TestInfoExtraction < Test::Unit::TestCase
 		assert_equal 'release', m.name
 		assert_map_equal({'release'=>2,
 			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+	end
+
+	def test_info_extraction_csvexporter_1
+		m = @csvexporter_model_node.types[0].members[4]
+		assert_equal 'getFileExtension', m.name
+		# there is only a getter so it does not recognize it as separate
+		assert_map_equal({'getfileextension'=>1,'string'=>1,'csv'=>1}, InfoExtraction.terms_map(m))
+	end
+
+	def test_info_extraction_csvexporter_2
+		m = @csvexporter_model_node.types[0].members[5]
+		assert_equal 'export', m.name
+		assert_map_equal({
+			'byte'=>1,
+			'bytearray'=>1,
+			'bytearrayoutputstream'=>2,
+			'session'=>2,'object'=>2,
+			'data'=>2,'to'=>1,
+			'export'=>2,'exception'=>1,
+			'override'=>1}, InfoExtraction.terms_map(m))
+	end
+
+	def test_info_extraction_authconstraint_1
+		m = @authconstraint_model_node.types[0].members[1]
+		assert_equal 'addRoleName', m.name
+		assert_map_equal({'add'=>2,'role'=>3,'name'=>3,'string'=>1,'rolenames'=>1}, InfoExtraction.terms_map(m))
+	end	
+
+	def test_info_extraction_authconstraint_2
+		m = @authconstraint_model_node.types[0].members[2]
+		assert_equal 'getRoleNames', m.name
+		assert_map_equal({'collection'=>1,'string'=>1,'get'=>1,'rolenames'=>2}, InfoExtraction.terms_map(m))
+	end
+
+	def test_info_extraction_testiteration_1
+		m = @testiteration_model_node.types[0].members[4]
+		assert_equal 'testGetRemainingHours', m.name
+		assert_map_equal({'test'=>1,'get'=>2,'remaining'=>2,'assertequals'=>1,
+			'0.0d'=>1,'iteration'=>1,'task'=>1,'0.0'=>1,'exception'=>1,'hours'=>2}, InfoExtraction.terms_map(m))
+	end	
+
+	def test_info_extraction_testiteration_2
+		m = @testiteration_model_node.types[0].members[10]
+		assert_equal 'testGetAddedHours', m.name
+		assert_map_equal({'test'=>2,'get'=>2,'added'=>2,'hours'=>2,'assertequals'=>1,'iteration'=>4,
+			'estimated'=>1,'tasks'=>1,
+			'5.0d'=>1,'0.0'=>1,'exception'=>1,'set'=>1,'up'=>1,'of'=>1}, InfoExtraction.terms_map(m))
 	end
 
 end
