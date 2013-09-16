@@ -82,6 +82,10 @@ class JavaSpecificInfoExtractionLogic
 		LightModels::Java::InfoExtraction.camel_to_words(value)
 	end
 
+	def concat(a,b)
+		a+b
+	end
+
 end
 
 def self.terms_map(model_node,context=nil)
