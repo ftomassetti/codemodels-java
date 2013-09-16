@@ -8,6 +8,13 @@ def relative_path(path)
 	File.join(File.dirname(__FILE__),path)
 end
 
+def test_data(filename)
+	dir = File.dirname(__FILE__)
+	dir = File.join(dir,'data')
+	path = File.join(dir,path)
+	IO.read(path)
+end
+
 def assert_all_attrs(expected,c)
 	actual = c.ecore.eAllAttributes
 	assert_equal expected.count,actual.count,"Expected #{expected.count} attrs, found #{actual.count}"
