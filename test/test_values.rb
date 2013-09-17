@@ -22,14 +22,14 @@ class TestValues < Test::Unit::TestCase
 	def assert_code_map_to(code,exp)
 		r = Java.parse_code(code)
 		ser = LightModels::Serialization.jsonize_obj(r)
-		map = LightModels::Query.collect_values_with_count(ser)
+		map = LightModels::QuerySerialized.collect_values_with_count(ser)
 		assert_map(exp,map,ser)
 	end
 
 	def assert_method_code_map_to(code,exp)
 		r = Java.parse_code("class A { #{code} }")
 		ser = LightModels::Serialization.jsonize_obj(r.types[0].members[0])
-		map = LightModels::Query.collect_values_with_count(ser)
+		map = LightModels::QuerySerialized.collect_values_with_count(ser)
 		assert_map(exp,map,ser)
 	end
 
