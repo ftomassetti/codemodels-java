@@ -105,6 +105,8 @@ module Java
 			if node.parent.class.to_s=='Java::JapaParserAstExpr::ObjectCreationExpr'
 				# ObjectCreationExpr has not interface? but it is always a method definition
 				name = 'ClassMethodDeclaration'
+			elsif node.parent.class.to_s=='Java::JapaParserAstBody::EnumDeclaration'
+				name = 'ClassMethodDeclaration' 
 			elsif node.parent.interface?				
 				name = 'InterfaceMethodDeclaration'
 			else
