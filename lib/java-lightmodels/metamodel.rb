@@ -27,6 +27,7 @@ module Java
 	JavaList    = ::Java::JavaClass.for_name("java.util.List")
 	JavaBoolean = ::Java::boolean.java_class
 	JavaInt = ::Java::int.java_class
+	JapaMethodDeclaration = ::Java::JavaClass.for_name("japa.parser.ast.body.MethodDeclaration")
 
 	MappedAstClasses = {}
 
@@ -99,6 +100,19 @@ module Java
 		node_class = node.class
 		name = simple_java_class_name(node_class)
 		name = "#{(node.operator.name).proper_capitalize}BinaryExpr" if name=='BinaryExpr'
+		#puts "node.class: #{node.class}"
+		if node.class.to_s=='Java::JapaParserAstBody::MethodDeclaration'
+			if node.parent.class.to_s=='Java::JapaParserAstExpr::ObjectCreationExpr'
+				# ObjectCreationExpr has not interface? but it is always a method definition
+				name = 'ClassMethodDeclaration'
+			elsif node.parent.class.to_s=='Java::JapaParserAstBody::EnumDeclaration'
+				name = 'ClassMethodDeclaration' 
+			elsif node.parent.interface?				
+				name = 'InterfaceMethodDeclaration'
+			else
+				name = 'ClassMethodDeclaration'
+			end
+		end
 		return Java.const_get(name)
 	end
 
@@ -224,7 +238,13 @@ module Java
 		c = Class.new(BinaryExpr)
 		Java.const_set "#{op}BinaryExpr", c
 	end
-	 
+	
+	class InterfaceMethodDeclaration < MethodDeclaration
+	end
+
+	class ClassMethodDeclaration < MethodDeclaration
+	end
+
 end
 
 end

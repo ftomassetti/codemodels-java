@@ -142,7 +142,7 @@ class TestParsing < Test::Unit::TestCase
     }
     model = LightModels::Java.parse_code(code)
     m = model.types[0].members[0]
-    assert_class MethodDeclaration,m
+    assert_class ClassMethodDeclaration,m
     assert_class BlockStmt,m.body
     
     assert_class IfStmt,m.body.stmts[0]
