@@ -9,10 +9,6 @@ class TestValues < Test::Unit::TestCase
 	include LightModels
 
 	def assert_map(exp,map,model)
-		# ignore boolean values...
-		#map.delete true
-		#map.delete false
-
 		assert_equal exp.count,map.count, "Expected to have keys: #{exp.keys}, it has #{map.keys}. Unexpected keys: #{map.keys - exp.keys}, Missing keys: #{exp.keys - map.keys}. Model: #{model.inspect}"
 		exp.each do |k,v|
 			assert_equal exp[k],map[k], "Expected #{k} to have #{exp[k]} instances, it has #{map[k]}. Keys of the map: #{map.keys}"
@@ -21,16 +17,15 @@ class TestValues < Test::Unit::TestCase
 
 	def assert_code_map_to(code,exp)
 		r = Java.parse_code(code)
-		ser = LightModels::Serialization.jsonize_obj(r)
-		map = LightModels::QuerySerialized.collect_values_with_count(ser)
-		assert_map(exp,map,ser)
+		map = r.values_map
+		assert_map(exp,map,r.to_json)
 	end
 
 	def assert_method_code_map_to(code,exp)
 		r = Java.parse_code("class A { #{code} }")
-		ser = LightModels::Serialization.jsonize_obj(r.types[0].members[0])
-		map = LightModels::QuerySerialized.collect_values_with_count(ser)
-		assert_map(exp,map,ser)
+		m = r.types[0].members[0]
+		map = m.values_map
+		assert_map(exp,map,m.to_json)
 	end
 
 	def test_local_variables

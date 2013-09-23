@@ -3,25 +3,12 @@ require 'emf_jruby'
 require 'java'
 require 'lightmodels'
 
-class String
-	def remove_postfix(postfix)
-		raise "'#{self}'' have not the right postfix '#{postfix}'" unless end_with?(postfix)
-		self[0..-(1+postfix.length)]
-	end
-
-	def remove_prefix(prefix)
-		raise "'#{self}'' have not the right prefix '#{prefix}'" unless start_with?(prefix)
-		self[prefix.length..-1]
-	end
-
-	def uncapitalize 
-    	self[0, 1].downcase + self[1..-1]
-  	end
-end	
-
 module LightModels
 
 module Java
+
+	class JavaNode < RGen::MetamodelBuilder::MMBase
+	end
 
 	JavaString  = ::Java::JavaClass.for_name("java.lang.String")
 	JavaList    = ::Java::JavaClass.for_name("java.util.List")
@@ -38,7 +25,7 @@ module Java
 			java_class = ::Java::JavaClass.for_name("japa.parser.ast.#{ast_name}")
 			java_super_class = java_class.superclass
 			if java_super_class.name == 'japa.parser.ast.Node'
-				super_class = RGen::MetamodelBuilder::MMBase
+				super_class = JavaNode
 			else
 				raise "Super class #{java_super_class.name} of #{java_class.name}. It should be wrapped before!" unless MappedAstClasses[java_super_class]
 				super_class = MappedAstClasses[java_super_class]
@@ -121,8 +108,8 @@ module Java
 	private
 
 	def self.property_name(java_method)
-		return java_method.name.remove_prefix('get').uncapitalize if java_method.name.start_with?('get')
-		return java_method.name.remove_prefix('is').uncapitalize if java_method.name.start_with?('is')
+		return java_method.name.remove_prefix('get').proper_uncapitalize if java_method.name.start_with?('get')
+		return java_method.name.remove_prefix('is').proper_uncapitalize if java_method.name.start_with?('is')
 	end
 
 	def self.simple_java_class_name(java_class)

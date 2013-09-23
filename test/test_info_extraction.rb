@@ -98,13 +98,11 @@ class TestInfoExtraction < Test::Unit::TestCase
 			'obj' => 5,
 			'true' => 1,
 			'false' => 2,
-			#'this' => 2,
 			'other' => 3
 		}
 		model_node = Java.parse_code(code)
-		terms_map = InfoExtraction.terms_map(model_node)
-		#puts model_node
-		assert_map_equal exp_terms,terms_map,LightModels::Serialization.jsonize_obj(model_node)
+		terms_map = model_node.terms_map
+		assert_map_equal exp_terms,terms_map,model_node.to_json
 	end
 
 	def test_actionbutonscomumntag_sanity_check
@@ -115,7 +113,7 @@ class TestInfoExtraction < Test::Unit::TestCase
 	def test_info_extraction_actionbuttonscomumntag_method_1
 		m = @actionbuttonscomumntag_model_node.types[0].members[2]
 		assert_equal 'setActionButtonsTag', m.name
-		assert_map_equal({'actionbuttonstag'=>5, 'set'=>1}, InfoExtraction.terms_map(m))
+		assert_map_equal({'actionbuttonstag'=>5, 'set'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_2
@@ -130,49 +128,49 @@ class TestInfoExtraction < Test::Unit::TestCase
 			'column' => 1,
 			'tag' => 1,
 			'actionbuttonstag'=>3,'showonly'=>1,
-			'withicon' => 1}, InfoExtraction.terms_map(m))
+			'withicon' => 1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_3
 		m = @actionbuttonscomumntag_model_node.types[0].members[4]
 		assert_equal 'setPageContext', m.name
 		assert_map_equal({'set'=>3, 'pagecontext'=>4,
-			'context'=>3, 'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+			'context'=>3, 'actionbuttonstag'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_4
 		m = @actionbuttonscomumntag_model_node.types[0].members[5]
 		assert_equal 'setId', m.name
 		assert_map_equal({'set'=>2, 'id'=>3, 'string'=>1,
-			's'=>3,'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+			's'=>3,'actionbuttonstag'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_5
 		m = @actionbuttonscomumntag_model_node.types[0].members[6]
 		assert_equal 'getName', m.name
 		assert_map_equal({'get'=>2, 'name'=>2, 'string'=>1,
-			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+			'actionbuttonstag'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_6
 		m = @actionbuttonscomumntag_model_node.types[0].members[7]
 		assert_equal 'setName', m.name
 		assert_map_equal({'set'=>2, 'name'=>4, 'string'=>1,
-			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+			'actionbuttonstag'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_7
 		m = @actionbuttonscomumntag_model_node.types[0].members[8]
 		assert_equal 'getScope', m.name
 		assert_map_equal({'get'=>2, 'scope'=>2, 'string'=>1,
-			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+			'actionbuttonstag'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_8
 		m = @actionbuttonscomumntag_model_node.types[0].members[9]
 		assert_equal 'setScope', m.name
 		assert_map_equal({'set'=>2, 'scope'=>4, 'string'=>1,
-			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+			'actionbuttonstag'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_9
@@ -185,14 +183,14 @@ class TestInfoExtraction < Test::Unit::TestCase
 			'get'=>3,'is'=>1,'SKIP_BODY'=>2,'constants'=>2,
 			'ATTRIBUTE_NOWRAP'=>2,'true'=>1,'attributemap'=>2,
 			'containskey'=>1,'put'=>1,
-			'status'=>3,'exception'=>1,'e'=>2}, InfoExtraction.terms_map(m))
+			'status'=>3,'exception'=>1,'e'=>2}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_10
 		m = @actionbuttonscomumntag_model_node.types[0].members[11]
 		assert_equal 'doAfterBody', m.name
 		assert_map_equal({'int'=>1, 'do'=>2, 'afterbody'=>2,
-			'actionbuttonstag'=>1, 'jspexception'=>1}, InfoExtraction.terms_map(m))
+			'actionbuttonstag'=>1, 'jspexception'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_11
@@ -202,21 +200,21 @@ class TestInfoExtraction < Test::Unit::TestCase
 			'actionbuttonstag'=>1, 'jspexception'=>2,
 			'writable'=>3, 'tag'=>5,'is'=>1,
 			'parent'=>1,'parenttable'=>2,
-			'SKIP_BODY'=>1,'exception'=>1,'e'=>2, 'get'=>1}, InfoExtraction.terms_map(m))
+			'SKIP_BODY'=>1,'exception'=>1,'e'=>2, 'get'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_actionbuttonscomumntag_method_12
 		m = @actionbuttonscomumntag_model_node.types[0].members[13]
 		assert_equal 'release', m.name
 		assert_map_equal({'release'=>2,
-			'actionbuttonstag'=>1}, InfoExtraction.terms_map(m))
+			'actionbuttonstag'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_csvexporter_1
 		m = @csvexporter_model_node.types[0].members[4]
 		assert_equal 'getFileExtension', m.name
 		# there is only a getter so it does not recognize it as separate
-		assert_map_equal({'getfileextension'=>1,'string'=>1,'csv'=>1}, InfoExtraction.terms_map(m))
+		assert_map_equal({'getfileextension'=>1,'string'=>1,'csv'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_csvexporter_2
@@ -229,26 +227,26 @@ class TestInfoExtraction < Test::Unit::TestCase
 			'session'=>2,'object'=>2,
 			'data'=>2,'to'=>1,
 			'export'=>2,'exception'=>1,
-			'override'=>1}, InfoExtraction.terms_map(m))
+			'override'=>1}, m.terms_map)
 	end
 
 	def test_info_extraction_authconstraint_1
 		m = @authconstraint_model_node.types[0].members[1]
 		assert_equal 'addRoleName', m.name
-		assert_map_equal({'add'=>2,'role'=>3,'name'=>3,'string'=>1,'rolenames'=>1}, InfoExtraction.terms_map(m))
+		assert_map_equal({'add'=>2,'role'=>3,'name'=>3,'string'=>1,'rolenames'=>1}, m.terms_map)
 	end	
 
 	def test_info_extraction_authconstraint_2
 		m = @authconstraint_model_node.types[0].members[2]
 		assert_equal 'getRoleNames', m.name
-		assert_map_equal({'collection'=>1,'string'=>1,'get'=>1,'rolenames'=>2}, InfoExtraction.terms_map(m))
+		assert_map_equal({'collection'=>1,'string'=>1,'get'=>1,'rolenames'=>2}, m.terms_map)
 	end
 
 	def test_info_extraction_testiteration_1
 		m = @testiteration_model_node.types[0].members[4]
 		assert_equal 'testGetRemainingHours', m.name
 		assert_map_equal({'test'=>1,'get'=>2,'remaining'=>2,'assertequals'=>1,
-			'0.0d'=>1,'iteration'=>1,'task'=>1,'0.0'=>1,'exception'=>1,'hours'=>2}, InfoExtraction.terms_map(m))
+			'0.0d'=>1,'iteration'=>1,'task'=>1,'0.0'=>1,'exception'=>1,'hours'=>2}, m.terms_map)
 	end	
 
 	def test_info_extraction_testiteration_2
@@ -256,7 +254,7 @@ class TestInfoExtraction < Test::Unit::TestCase
 		assert_equal 'testGetAddedHours', m.name
 		assert_map_equal({'test'=>2,'get'=>2,'added'=>2,'hours'=>2,'assertequals'=>1,'iteration'=>4,
 			'estimated'=>1,'tasks'=>1,
-			'5.0d'=>1,'0.0'=>1,'exception'=>1,'set'=>1,'up'=>1,'of'=>1}, InfoExtraction.terms_map(m))
+			'5.0d'=>1,'0.0'=>1,'exception'=>1,'set'=>1,'up'=>1,'of'=>1}, m.terms_map)
 	end
 
 end

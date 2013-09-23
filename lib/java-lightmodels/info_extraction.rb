@@ -91,10 +91,18 @@ class JavaSpecificInfoExtractionLogic
 
 end
 
-def self.terms_map(model_node,context=nil)
-	LightModels::InfoExtraction.terms_map(JavaSpecificInfoExtractionLogic.new,model_node,context)
+end # end of InfoExtraction
+
+module JavaInfoExtractionFunctionalities
+
+	def terms_map(context=nil)
+		super(InfoExtraction::JavaSpecificInfoExtractionLogic.new,context)
+	end
+
 end
 
+class JavaNode
+	include JavaInfoExtractionFunctionalities
 end
 
 end
