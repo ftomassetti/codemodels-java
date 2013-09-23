@@ -11,9 +11,9 @@ class TestParsing < Test::Unit::TestCase
 
   def setup
     @dir = File.dirname(__FILE__)
-  	@example_basic = LightModels::Java.parse_file(@dir+'/example_basic.java')
-    @example_accessors = LightModels::Java.parse_file(@dir+'/example_accessors.java')
-    @reorder_stories_form = LightModels::Java.parse_file(@dir+'/ReorderStoriesForm.java')
+  	@example_basic = LightModels.parse_file(@dir+'/example_basic.java')
+    @example_accessors = LightModels.parse_file(@dir+'/example_accessors.java')
+    @reorder_stories_form = LightModels.parse_file(@dir+'/ReorderStoriesForm.java')
     @metaclass_class = LightModels::Java::ClassOrInterfaceDeclaration    
   end
 

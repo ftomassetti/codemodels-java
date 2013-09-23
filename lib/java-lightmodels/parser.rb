@@ -54,15 +54,16 @@ def self.corresponding_node_from_code(model_element,code)
 	corresponding_node(model_element,node_tree)
 end
 
-def self.parse_file(path)
-	fis = FileInputStream.new path
-	root = JavaParser.parse(fis)
-	fis.close
-	node_to_model(root)
-end
-
 def self.parse_code(code)	
 	node_to_model(node_tree_from_code(code))
+end
+
+class Parser < LightModels::Parser
+
+	def parse_code(code)
+		LightModels::Java.parse_code(code)
+	end
+
 end
 
 private
@@ -71,18 +72,6 @@ def self.adapter_specific_class(model_class,ref)
 	return nil unless LightModels::Java::PROP_ADAPTERS[model_class]
 	LightModels::Java::PROP_ADAPTERS[model_class][ref.name]
 end
-
-# def self.convert_to_rgen(node)
-# 	metaclass = get_corresponding_metaclass(node.class)
-# 	instance = metaclass.new
-# 	metaclass.ecore.eAllAttributes.each do |attr|
-# 		puts " * populate #{attr}"
-# 	end
-# 	metaclass.ecore.eAllReferences.each do |ref|
-# 		puts " * populate #{ref}"
-# 	end
-# 	instance
-# end
 
 end
 end
