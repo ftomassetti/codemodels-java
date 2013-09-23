@@ -7,9 +7,18 @@ Gem::Specification.new do |s|
   s.description = "Create EMF models of Java code and serialize them in JSON"
   s.authors     = ["Federico Tomassetti"]
   s.email       = 'f.tomassetti@gmail.com'
-  s.homepage    = 'http://federico-tomassetti.it'
-  s.files       = Dir['./lib/*.rb'] + Dir['./lib/java-lightmodels/*.rb'] + Dir['./lib/jars/*.jar']
+  s.homepage    = 'https://github.com/ftomassetti/java-lightmodels'
+  s.license     = "APACHE2"
+  s.files         = `git ls-files`.split($/)
+  s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
+  s.require_paths = ["lib"] + Dir['./lib/jars/*.jar']
+
   s.add_runtime_dependency 'lightmodels'
   s.add_runtime_dependency 'json'
-  s.add_runtime_dependency 'emf_jruby'
+
+  s.add_development_dependency "bundler", "~> 1.3"
+  s.add_development_dependency "rake"  
+  s.add_development_dependency "simplecov"
+  s.add_development_dependency "rubygems-tasks"
 end

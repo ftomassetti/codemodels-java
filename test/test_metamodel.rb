@@ -1,5 +1,4 @@
-require 'test/unit'
-require 'java-lightmodels'
+require 'test_helper'
 require 'rgen/ecore/ecore'
 
 class TestMetamodel < Test::Unit::TestCase

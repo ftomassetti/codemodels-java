@@ -1,7 +1,3 @@
-require 'java-lightmodels'
-require 'json'
-
-require "test/unit"
 require "test_helper"
  
 class TestParsing < Test::Unit::TestCase

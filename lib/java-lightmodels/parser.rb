@@ -1,8 +1,6 @@
-require 'emf_jruby'
 require 'lightmodels'
 
 module LightModels
-
 module Java
 
 class << self
@@ -87,5 +85,4 @@ end
 # end
 
 end
-
 end

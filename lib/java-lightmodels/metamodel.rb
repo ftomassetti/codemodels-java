@@ -1,10 +1,8 @@
 require 'rgen/metamodel_builder'
-require 'emf_jruby'
 require 'java'
 require 'lightmodels'
 
 module LightModels
-
 module Java
 
 	class JavaNode < RGen::MetamodelBuilder::MMBase
@@ -233,5 +231,4 @@ module Java
 	end
 
 end
-
 end

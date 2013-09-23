@@ -1,8 +1,7 @@
 # Here we test that models of Java code contains all the information
 # that they should
 
-require 'test/unit'
-require 'java-lightmodels'
+require 'test_helper'
 
 class TestValues < Test::Unit::TestCase
 
@@ -16,13 +15,13 @@ class TestValues < Test::Unit::TestCase
 	end
 
 	def assert_code_map_to(code,exp)
-		r = Java.parse_code(code)
+		r = LightModels::Java.parse_code(code)
 		map = r.values_map
 		assert_map(exp,map,r.to_json)
 	end
 
 	def assert_method_code_map_to(code,exp)
-		r = Java.parse_code("class A { #{code} }")
+		r = LightModels::Java.parse_code("class A { #{code} }")
 		m = r.types[0].members[0]
 		map = m.values_map
 		assert_map(exp,map,m.to_json)

@@ -1,5 +1,3 @@
-require 'test/unit'
-require 'java-lightmodels'
 require 'test_helper'
 
 class TestInfoExtraction < Test::Unit::TestCase
@@ -9,10 +7,10 @@ class TestInfoExtraction < Test::Unit::TestCase
 	include TestHelper
 
 	def setup
-		@actionbuttonscomumntag_model_node = Java.parse_code(read_test_data('ActionButtonsColumnTag.java'))
-		@csvexporter_model_node            = Java.parse_code(read_test_data('CsvExporter.java'))
-		@authconstraint_model_node         = Java.parse_code(read_test_data('AuthConstraint.java'))
-		@testiteration_model_node          = Java.parse_code(read_test_data('TestIteration.java'))
+		@actionbuttonscomumntag_model_node = LightModels::Java.parse_code(read_test_data('ActionButtonsColumnTag.java'))
+		@csvexporter_model_node            = LightModels::Java.parse_code(read_test_data('CsvExporter.java'))
+		@authconstraint_model_node         = LightModels::Java.parse_code(read_test_data('AuthConstraint.java'))
+		@testiteration_model_node          = LightModels::Java.parse_code(read_test_data('TestIteration.java'))
 	end
 
 	def test_camel_to_words_single_word_upcase
@@ -100,7 +98,7 @@ class TestInfoExtraction < Test::Unit::TestCase
 			'false' => 2,
 			'other' => 3
 		}
-		model_node = Java.parse_code(code)
+		model_node = LightModels::Java.parse_code(code)
 		terms_map = model_node.terms_map
 		assert_map_equal exp_terms,terms_map,model_node.to_json
 	end

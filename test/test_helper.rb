@@ -1,3 +1,14 @@
+require 'simplecov'
+SimpleCov.start do
+	add_filter "/test/"	
+end
+
+require 'java-lightmodels'
+require 'json'
+require 'test/unit'
+
+include LightModels
+
 module TestHelper
 
 def assert_class(expected_class,node)

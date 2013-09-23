@@ -1,4 +1,3 @@
-require 'emf_jruby'
 require 'json'
 require 'java-lightmodels/model_building'
 require 'lightmodels'
