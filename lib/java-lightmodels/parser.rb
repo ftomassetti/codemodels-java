@@ -66,6 +66,12 @@ class Parser < LightModels::Parser
 
 end
 
+DefaultParser = Parser.new
+
+def self.parse_file(path)	
+	DefaultParser.parse_file(path)
+end
+
 private
 
 def self.adapter_specific_class(model_class,ref)
