@@ -41,7 +41,7 @@ class TestParsing < Test::Unit::TestCase
 
   def test_fields_are_found
     c = @example_accessors.only_child_deep_of_type(@metaclass_class)
-    fields = c.children_deep_of_type(FieldDeclaration)
+    fields = c.all_children_deep_of_type(FieldDeclaration)
     assert_equal 2,fields.count
     assert_not_nil fields.find { |f| f.variables[0].id.name == 'myField'}
     assert_not_nil fields.find { |f| f.variables[0].id.name == 'aFlag'}
@@ -49,7 +49,7 @@ class TestParsing < Test::Unit::TestCase
 
   def test_methods_are_found
     c = @example_accessors.only_child_deep_of_type(@metaclass_class)
-    methods = c.children_deep_of_type(MethodDeclaration)
+    methods = c.all_children_deep_of_type(MethodDeclaration)
     assert_equal(4,methods.count)
     assert_not_nil methods.find { |m| m.name == 'getMyField'}
     assert_not_nil methods.find { |m| m.name == 'setMyField'}
