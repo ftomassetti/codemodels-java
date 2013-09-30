@@ -1,6 +1,6 @@
 require 'json'
-require 'java-lightmodels/model_building'
-require 'lightmodels'
+require 'codemodels/java/model_building'
+require 'codemodels'
 
 $PWD = File.dirname(__FILE__)
 
@@ -14,4 +14,4 @@ raise "Path to models does not exist or it is not a dir: #{models_path}" unless 
 $SRC  = sources_path
 $DEST = models_path
 
-LightModels::Java.generate_java_models_in_dir($SRC,$DEST)
+CodeModels::Java.generate_java_models_in_dir($SRC,$DEST)

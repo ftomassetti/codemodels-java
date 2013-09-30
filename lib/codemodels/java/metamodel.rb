@@ -1,8 +1,8 @@
 require 'rgen/metamodel_builder'
 require 'java'
-require 'lightmodels'
+require 'codemodels'
 
-module LightModels
+module CodeModels
 module Java
 
 	class JavaNode < RGen::MetamodelBuilder::MMBase
@@ -47,7 +47,7 @@ module Java
 				
 			c.class_eval do
 				ast_class.java_class.declared_instance_methods.select {|m| m.name.start_with?('get')||m.name.start_with?('is') }.each do |m|
-					prop_name = LightModels::Java.property_name(m)
+					prop_name = CodeModels::Java.property_name(m)
 					unless props_to_ignore.include?(prop_name)
 						if m.return_type==JavaString
 							has_attr prop_name, String
@@ -59,7 +59,7 @@ module Java
 							contains_one_uni prop_name, MappedAstClasses[m.return_type]
 						elsif m.return_type==JavaList
 		#					puts "Property #{prop_name} is a list"
-							type_name = LightModels::Java.get_generic_param(m.to_generic_string)
+							type_name = CodeModels::Java.get_generic_param(m.to_generic_string)
 							last = type_name.index '>'
 							type_name = type_name[0..last-1]
 							type_ast_class = MappedAstClasses.keys.find{|k| k.name==type_name}

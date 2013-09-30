@@ -1,4 +1,6 @@
-java_model_jrb
-==============
+codemodels-java
+===============
 
-Create EMF models of Java code and serialize them in JSON
+Plugin of codemodels to build models from Java code.
+
+See http://github.com/ftomassetti/codemodels

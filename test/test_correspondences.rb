@@ -3,10 +3,10 @@ require "test_helper"
 class TestCorrespondences < Test::Unit::TestCase
 
   include TestHelper
-  include LightModels
-  include LightModels::Java
+  include CodeModels
+  include CodeModels::Java
 
-  J = LightModels::Java
+  J = CodeModels::Java
 
   def test_correspondance_of_field
     code = "class A extends B { int fieldB; int getB(){ return fieldB; } }"

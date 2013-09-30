@@ -3,18 +3,18 @@ require "test_helper"
 class TestParsing < Test::Unit::TestCase
 
   include TestHelper
-  include LightModels::Java
+  include CodeModels::Java
 
   class << self
     #include JavaModel
   end
 
   def setup
-    @dir = File.dirname(__FILE__)
-  	@example_basic = LightModels.parse_file(@dir+'/example_basic.java')
-    @example_accessors = LightModels.parse_file(@dir+'/example_accessors.java')
-    @reorder_stories_form = LightModels.parse_file(@dir+'/ReorderStoriesForm.java')
-    @metaclass_class = LightModels::Java::ClassOrInterfaceDeclaration    
+    @dir = File.dirname(__FILE__)+'/data'
+  	@example_basic = CodeModels.parse_file(@dir+'/example_basic.java')
+    @example_accessors = CodeModels.parse_file(@dir+'/example_accessors.java')
+    @reorder_stories_form = CodeModels.parse_file(@dir+'/ReorderStoriesForm.java')
+    @metaclass_class = CodeModels::Java::ClassOrInterfaceDeclaration    
   end
 
   def test_model_contains_class
@@ -34,7 +34,7 @@ class TestParsing < Test::Unit::TestCase
   # def test_eobject_contains_fullname
   #   my_class = @example_basic.only_child_deep_of_type(@metaclass_class)
   #   puts "my_class #{my_class.class}"
-  #   js = LightModels::Serialization.jsonize_obj(my_class)
+  #   js = CodeModels::Serialization.jsonize_obj(my_class)
   #   assert js.has_key? 'attr_fullname'
   #   assert_equal('it.polito.MyClass',js['attr_fullname'])
   # end
@@ -136,7 +136,7 @@ class TestParsing < Test::Unit::TestCase
         }
       }
     }
-    model = LightModels::Java.parse_code(code)
+    model = CodeModels::Java.parse_code(code)
     m = model.types[0].members[0]
     assert_class ClassMethodDeclaration,m
     assert_class BlockStmt,m.body

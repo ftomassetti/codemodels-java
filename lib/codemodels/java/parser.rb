@@ -1,6 +1,6 @@
-require 'lightmodels'
+require 'codemodels'
 
-module LightModels
+module CodeModels
 module Java
 
 class << self
@@ -58,10 +58,10 @@ def self.parse_code(code)
 	node_to_model(node_tree_from_code(code))
 end
 
-class Parser < LightModels::Parser
+class Parser < CodeModels::Parser
 
 	def parse_code(code)
-		LightModels::Java.parse_code(code)
+		CodeModels::Java.parse_code(code)
 	end
 
 end
@@ -75,8 +75,8 @@ end
 private
 
 def self.adapter_specific_class(model_class,ref)
-	return nil unless LightModels::Java::PROP_ADAPTERS[model_class]
-	LightModels::Java::PROP_ADAPTERS[model_class][ref.name]
+	return nil unless CodeModels::Java::PROP_ADAPTERS[model_class]
+	CodeModels::Java::PROP_ADAPTERS[model_class][ref.name]
 end
 
 end

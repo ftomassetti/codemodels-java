@@ -1,4 +1,4 @@
-module LightModels
+module CodeModels
 
 module Java
 
@@ -75,11 +75,11 @@ end
 class JavaSpecificInfoExtractionLogic
 	
 	def terms_containing_value?(value)
-		LightModels::Java::InfoExtraction.is_camel_case_str(value)
+		CodeModels::Java::InfoExtraction.is_camel_case_str(value)
 	end
 
 	def to_words(value)
-		res = ::LightModels::Java::InfoExtraction.camel_to_words(value)
+		res = ::CodeModels::Java::InfoExtraction.camel_to_words(value)
 		res.each {|v| raise "Camel case to words produced a nil" if v==nil}
 		raise "No words found using the camel case to words" if res.count==0		
 		res

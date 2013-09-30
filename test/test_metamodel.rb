@@ -49,7 +49,7 @@ class TestMetamodel < Test::Unit::TestCase
 	end
 
 	def get_metaclass(name)
-		LightModels::Java.const_get(name)
+		CodeModels::Java.const_get(name)
 	end
 
 	def test_comment_unit_exist

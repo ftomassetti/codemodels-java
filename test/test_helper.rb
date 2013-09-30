@@ -3,11 +3,11 @@ SimpleCov.start do
 	add_filter "/test/"	
 end
 
-require 'java-lightmodels'
+require 'codemodels/java'
 require 'json'
 require 'test/unit'
 
-include LightModels
+include CodeModels
 
 module TestHelper
 
