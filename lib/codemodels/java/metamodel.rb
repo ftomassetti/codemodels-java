@@ -1,11 +1,12 @@
 require 'rgen/metamodel_builder'
 require 'java'
 require 'codemodels'
+require 'codemodels/javaparserwrapper'
 
 module CodeModels
 module Java
 
-	class JavaNode < RGen::MetamodelBuilder::MMBase
+	class JavaNode < CodeModelsAstNode
 	end
 
 	JavaString  = ::Java::JavaClass.for_name("java.lang.String")
@@ -34,7 +35,7 @@ module Java
 			c = Class.new(super_class)
 			raise "Already mapped! #{ast_name}" if MappedAstClasses[java_class]
 			MappedAstClasses[java_class] = c
-			Java.const_set simple_java_class_name(ast_class), c
+			Java.const_set CodeModels::Javaparserwrapper::Utils.simple_java_class_name(ast_class), c
 		end
 
 		# then add all the properties and attributes
@@ -81,25 +82,6 @@ module Java
 		end
 	end
 
-	def self.get_corresponding_metaclass(node)
-		node_class = node.class
-		name = simple_java_class_name(node_class)
-		name = "#{(node.operator.name).proper_capitalize}BinaryExpr" if name=='BinaryExpr'
-		#puts "node.class: #{node.class}"
-		if node.class.to_s=='Java::JapaParserAstBody::MethodDeclaration'
-			if node.parent.class.to_s=='Java::JapaParserAstExpr::ObjectCreationExpr'
-				# ObjectCreationExpr has not interface? but it is always a method definition
-				name = 'ClassMethodDeclaration'
-			elsif node.parent.class.to_s=='Java::JapaParserAstBody::EnumDeclaration'
-				name = 'ClassMethodDeclaration' 
-			elsif node.parent.interface?				
-				name = 'InterfaceMethodDeclaration'
-			else
-				name = 'ClassMethodDeclaration'
-			end
-		end
-		return Java.const_get(name)
-	end
 
 	PROP_ADAPTERS = Hash.new {|h,k| h[k] = {} }
 
@@ -109,12 +91,6 @@ module Java
 		return java_method.name.remove_prefix('get').proper_uncapitalize if java_method.name.start_with?('get')
 		return java_method.name.remove_prefix('is').proper_uncapitalize if java_method.name.start_with?('is')
 	end
-
-	def self.simple_java_class_name(java_class)
-		name = java_class.name
-    	if (i = (r = name).rindex(':')) then r[0..i] = '' end
-    	r
-  	end
 
   	def self.get_generic_param(generic_str)
   		return generic_str.remove_prefix('public java.util.List<') if generic_str.start_with?('public java.util.List<')

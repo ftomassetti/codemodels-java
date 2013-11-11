@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"] + Dir['./lib/jars/*.jar']
 
   s.add_runtime_dependency 'codemodels'
+  s.add_runtime_dependency 'codemodels-javaparserwrapper'
   s.add_runtime_dependency 'json'
 
   s.add_development_dependency "bundler", "~> 1.3"
