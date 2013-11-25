@@ -12,7 +12,7 @@ module Java
 	JavaString  = ::Java::JavaClass.for_name("java.lang.String")
 	JavaList    = ::Java::JavaClass.for_name("java.util.List")
 	JavaBoolean = ::Java::boolean.java_class
-	JavaInt = ::Java::int.java_class
+	JavaInt     = ::Java::int.java_class
 	JapaMethodDeclaration = ::Java::JavaClass.for_name("japa.parser.ast.body.MethodDeclaration")
 
 	MappedAstClasses = {}
@@ -59,7 +59,6 @@ module Java
 						elsif MappedAstClasses.has_key?(m.return_type)
 							contains_one_uni prop_name, MappedAstClasses[m.return_type]
 						elsif m.return_type==JavaList
-		#					puts "Property #{prop_name} is a list"
 							type_name = CodeModels::Java.get_generic_param(m.to_generic_string)
 							last = type_name.index '>'
 							type_name = type_name[0..last-1]
@@ -75,8 +74,6 @@ module Java
 							raise "#{ast_name}) Property (single) #{prop_name} is else: #{m.return_type}"
 						end
 					end
-					#type = nil
-					#contains_one_uni prop_name, type
 				end
 			end
 		end
