@@ -6,9 +6,37 @@ module Java
 
 class Parser < CodeModels::Javaparserwrapper::ParserJavaWrapper
 
+	class MyBasicTransformationFactory < CodeModels::Javaparserwrapper::BasicTransformationFactory
+
+		def get_corresponding_class(node)
+			node_class = node.class
+			name = CodeModels::Javaparserwrapper::Utils.simple_java_class_name(node_class)
+			name = "#{(node.operator.name).proper_capitalize}BinaryExpr" if name=='BinaryExpr'
+			if node.class.to_s=='Java::JapaParserAstBody::MethodDeclaration'
+				if node.parent.class.to_s=='Java::JapaParserAstExpr::ObjectCreationExpr'
+					name = 'ClassMethodDeclaration'
+				elsif node.parent.class.to_s=='Java::JapaParserAstBody::EnumDeclaration'
+					name = 'ClassMethodDeclaration' 
+				elsif node.parent.interface?				
+					name = 'InterfaceMethodDeclaration'
+				else
+					name = 'ClassMethodDeclaration'
+				end
+			end
+			return Java.const_get(name)			
+		end
+
+	end
+
 	java_import 'japa.parser.JavaParser'
 	java_import 'java.io.FileInputStream'
 	java_import 'java.io.ByteArrayInputStream'
+
+	def initialize()
+		super
+		@transformer.factory = MyBasicTransformationFactory.new
+		@transformer.factory.target_module = CodeModels::Java
+	end
 
 	def containment_pos(node)
 		container = node.eContainer
@@ -55,10 +83,6 @@ class Parser < CodeModels::Javaparserwrapper::ParserJavaWrapper
 
 	def parse_code(code)	
 		node_to_model(node_tree_from_code(code))
-	end
-
-	def parse_file(path)	
-		DefaultParser.parse_file(path)
 	end
 
 	def get_corresponding_metaclass(node)
