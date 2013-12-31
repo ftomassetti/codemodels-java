@@ -35,7 +35,7 @@ module Java
 			c = Class.new(super_class)
 			raise "Already mapped! #{ast_name}" if MappedAstClasses[java_class]
 			MappedAstClasses[java_class] = c
-			Java.const_set CodeModels::Javaparserwrapper::Utils.simple_java_class_name(ast_class), c
+			Java.const_set CodeModels::JavaParserWrapper::Utils.simple_java_class_name(ast_class), c
 		end
 
 		# then add all the properties and attributes

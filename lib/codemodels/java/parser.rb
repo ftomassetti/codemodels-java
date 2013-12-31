@@ -4,13 +4,13 @@ require 'codemodels/javaparserwrapper'
 module CodeModels
 module Java
 
-class Parser < CodeModels::Javaparserwrapper::ParserJavaWrapper
+class Parser < CodeModels::JavaParserWrapper::ParserJavaWrapper
 
-	class MyBasicTransformationFactory < CodeModels::Javaparserwrapper::BasicTransformationFactory
+	class MyBasicTransformationFactory < CodeModels::JavaParserWrapper::BasicTransformationFactory
 
 		def get_corresponding_class(node)
 			node_class = node.class
-			name = CodeModels::Javaparserwrapper::Utils.simple_java_class_name(node_class)
+			name = CodeModels::JavaParserWrapper::Utils.simple_java_class_name(node_class)
 			name = "#{(node.operator.name).proper_capitalize}BinaryExpr" if name=='BinaryExpr'
 			if node.class.to_s=='Java::JapaParserAstBody::MethodDeclaration'
 				if node.parent.class.to_s=='Java::JapaParserAstExpr::ObjectCreationExpr'
@@ -87,7 +87,7 @@ class Parser < CodeModels::Javaparserwrapper::ParserJavaWrapper
 
 	def get_corresponding_metaclass(node)
 		node_class = node.class
-		name = CodeModels::Javaparserwrapper::Utils.simple_java_class_name(node_class)
+		name = CodeModels::JavaParserWrapper::Utils.simple_java_class_name(node_class)
 		name = "#{(node.operator.name).proper_capitalize}BinaryExpr" if name=='BinaryExpr'
 		if node.class.to_s=='Java::JapaParserAstBody::MethodDeclaration'
 			if node.parent.class.to_s=='Java::JapaParserAstExpr::ObjectCreationExpr'
