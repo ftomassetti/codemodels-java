@@ -1,7 +1,12 @@
+# encoding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'codemodels/java/version'
+
 Gem::Specification.new do |s|
   s.platform    = 'java'
   s.name        = 'codemodels-java'
-  s.version     = '0.2.0'
+  s.version     = CodeModels::Java::VERSION
   s.date        = '2013-09-11'
   s.summary     = "Plugin of codemodels to build models from Ruby code."
   s.description = "Plugin of codemodels to build models from Ruby code. See http://github.com/ftomassetti/codemodels."
