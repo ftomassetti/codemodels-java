@@ -15,13 +15,13 @@ class TestValues < Test::Unit::TestCase
 	end
 
 	def assert_code_map_to(code,exp)
-		r = CodeModels::Java.parse_code(code)
+		r = CodeModels.parse_string(code,:Java)
 		map = r.values_map
 		assert_map(exp,map,r.to_json)
 	end
 
 	def assert_method_code_map_to(code,exp)
-		r = CodeModels::Java.parse_code("class A { #{code} }")
+		r = CodeModels.parse_string("class A { #{code} }",:Java)
 		m = r.types[0].members[0]
 		map = m.values_map
 		assert_map(exp,map,m.to_json)

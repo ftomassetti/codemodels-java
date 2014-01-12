@@ -33,7 +33,7 @@ class Parser < CodeModels::JavaParserWrapper::ParserJavaWrapper
 	java_import 'java.io.ByteArrayInputStream'
 
 	def initialize()
-		super
+		super()
 		@transformer.factory = MyBasicTransformationFactory.new
 		@transformer.factory.target_module = CodeModels::Java
 	end
@@ -81,8 +81,8 @@ class Parser < CodeModels::JavaParserWrapper::ParserJavaWrapper
 		corresponding_node(model_element,node_tree)
 	end
 
-	def parse_code(code)	
-		node_to_model(node_tree_from_code(code))
+	def internal_parse_artifact(artifact)
+		node_to_model(node_tree_from_code(artifact.code))
 	end
 
 	def get_corresponding_metaclass(node)

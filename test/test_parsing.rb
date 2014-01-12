@@ -136,7 +136,7 @@ class TestParsing < Test::Unit::TestCase
         }
       }
     }
-    model = CodeModels::Java.parse_code(code)
+    model = CodeModels.parse_string(code,:Java)
     m = model.types[0].members[0]
     assert_class ClassMethodDeclaration,m
     assert_class BlockStmt,m.body

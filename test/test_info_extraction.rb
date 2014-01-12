@@ -7,10 +7,10 @@ class TestInfoExtraction < Test::Unit::TestCase
 	include TestHelper
 
 	def setup
-		@actionbuttonscomumntag_model_node = CodeModels::Java.parse_code(read_test_data('ActionButtonsColumnTag.java'))
-		@csvexporter_model_node            = CodeModels::Java.parse_code(read_test_data('CsvExporter.java'))
-		@authconstraint_model_node         = CodeModels::Java.parse_code(read_test_data('AuthConstraint.java'))
-		@testiteration_model_node          = CodeModels::Java.parse_code(read_test_data('TestIteration.java'))
+		@actionbuttonscomumntag_model_node = CodeModels.parse_string(read_test_data('ActionButtonsColumnTag.java'),:Java)
+		@csvexporter_model_node            = CodeModels.parse_string(read_test_data('CsvExporter.java'),:Java)
+		@authconstraint_model_node         = CodeModels.parse_string(read_test_data('AuthConstraint.java'),:Java)
+		@testiteration_model_node          = CodeModels.parse_string(read_test_data('TestIteration.java'),:Java)
 	end
 
 	def test_camel_to_words_single_word_upcase
@@ -98,7 +98,7 @@ class TestInfoExtraction < Test::Unit::TestCase
 			'false' => 2,
 			'other' => 3
 		}
-		model_node = CodeModels::Java.parse_code(code)
+		model_node = CodeModels.parse_string(code,:Java)
 		terms_map = model_node.terms_map
 		assert_map_equal exp_terms,terms_map,model_node.to_json
 	end
